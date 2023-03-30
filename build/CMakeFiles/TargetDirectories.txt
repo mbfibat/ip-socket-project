@@ -1,3 +1,0 @@
-/home/mbfibat/ip-socket-project/build/CMakeFiles/client.dir
-/home/mbfibat/ip-socket-project/build/CMakeFiles/edit_cache.dir
-/home/mbfibat/ip-socket-project/build/CMakeFiles/rebuild_cache.dir
