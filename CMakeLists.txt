@@ -9,6 +9,7 @@ project(ipsocket)
 set (CLIENT_SOURCES
     client/main.cpp
     client/player.cpp
+    client/welcomeScreen.cpp
 ) 
 add_executable(client ${CLIENT_SOURCES})
 

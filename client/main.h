@@ -7,5 +7,6 @@
 
 #include "packet.h"
 #include "player.h"
+#include "welcomeScreen.h"
 
 #endif

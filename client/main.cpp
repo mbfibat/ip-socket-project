@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include "welcomeScreen.h"
 
 #include "main.h"
 
@@ -36,9 +37,9 @@ int main()
     sf::RenderWindow window{{800, 600}, "TGUI example - SFML_GRAPHICS backend"};
     tgui::Gui gui{window};
 
-    tgui::Button::Ptr button = tgui::Button::create("text button");
-    gui.add(button);
-    
+    // tgui::Button::Ptr button = tgui::Button::create("text button");
+    // gui.add(button);
+    drawWelcomeScreen(gui);
 
     while (window.isOpen())
     {
