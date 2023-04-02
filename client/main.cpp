@@ -3,30 +3,8 @@
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
-#include <TGUI/Backend/SFML-Graphics.hpp>
 
-const std::string IP = "127.0.0.1";
-const int PORT = 5000;
-
-struct Question {
-    std::string title;
-    std::string choice_A, choice_B, choice_C, choice_D;
-    Question(){}
-};
-
-
-std::ostream& operator <<(std::ostream& out, const Question& q) {
-    out << q.title << std::endl;
-    out << "A. " << q.choice_A << std::endl;
-    out << "B. " << q.choice_B << std::endl;
-    out << "C. " << q.choice_C << std::endl;
-    out << "D. " << q.choice_D << std::endl;
-    return out;
-}
-
-sf::Packet& operator >>(sf::Packet& packet, Question& q) {
-    return packet >> q.title >> q.choice_A >> q.choice_B >> q.choice_C >> q.choice_D;
-}
+#include "main.h"
 
 
 int main()
