@@ -1,34 +1,14 @@
 #include <string>
 #include <iostream>
-#include <SFML/Network.hpp>
-#include <SFML/Graphics.hpp>
-#include <TGUI/TGUI.hpp>
 
 #include "main.h"
 
 
 int main()
 {
-    sf::TcpSocket socket;
-    sf::Socket::Status status = socket.connect(IP, PORT);
-    if (status != sf::Socket::Done) {
-        std::cout << "Error connecting to server" << std::endl;
-        return 1;
-    }
-
-    sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done) {
-        std::cout << "Error receiving packet" << std::endl;
-        return 1;
-    }
-
-    Question q;
-    recv_packet >> q;
-    std::cout << q;
-
-    /*
     Player p;
-
+    p.test();
+    /*
     p.register_account();
 
     while (1)

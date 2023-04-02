@@ -8,7 +8,4 @@
 #include "packet.h"
 #include "player.h"
 
-const static int PORT = 5000;
-const static std::string IP = "127.0.0.1";
-
 #endif
