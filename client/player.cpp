@@ -1,2 +1,8 @@
-// test
-// test 2
+#include <SFML/Graphics.hpp>
+
+int main()
+{
+    
+
+    return 0;
+}

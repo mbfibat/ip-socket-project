@@ -1,6 +1,9 @@
 #include <string>
 #include <iostream>
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 
 const std::string IP = "127.0.0.1";
 const int PORT = 5000;
@@ -71,4 +74,31 @@ int main()
         }
     }
     */
+
+    sf::RenderWindow window{{800, 600}, "TGUI example - SFML_GRAPHICS backend"};
+    tgui::Gui gui{window};
+
+    tgui::Button::Ptr button = tgui::Button::create("text button");
+    gui.add(button);
+    
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            gui.handleEvent(event);
+
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+
+        gui.draw();
+
+        window.display();
+    }
+
+
 }
