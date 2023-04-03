@@ -24,6 +24,12 @@ void Screen::drawWelcomeScreen()
     exitBtn->onPress([&]
                      { this->window.close(); });
 }
+
+void caichet(tgui::String name)
+{
+    this->name = name;
+}
+
 void Screen::drawNamingScreen()
 {
     this->gui.removeAllWidgets();
@@ -42,19 +48,13 @@ void Screen::drawNamingScreen()
     this->gui.add(nameBox);
     this->gui.add(submitBtn);
 
-    nameBox->setFocused(true);
     // submitBtn->onPress([&]
-    //                    { this->drawGameScreen(); });
-    submitBtn->onPress([&]
-                       {
-                           if (nameBox->isFocused())
-                               this->name = nameBox->getText();
-                           else
-                               cout << "error here";
-
-                           //  stdname = name.toStdString();
-                           //  std::cout << "Text entered: " << stdname << std::endl;
-                       });
+    //                    {
+    //     if(nameBox->isFocused())
+    //         this->name = nameBox->getText();
+    //     else
+    //         cout << "error here"; });
+    nameBox->onReturnKeyPress(&caichet);
 }
 
 void Screen::drawGameScreen()
