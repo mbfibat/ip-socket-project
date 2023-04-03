@@ -31,14 +31,12 @@ int main() {
     }
     */
 
-    if (!p.connect()) return 0;
+    if (!p.connect())
+        return 0;
 
-    sf::RenderWindow window{{800, 600}, "TGUI example - SFML_GRAPHICS backend"};
+    sf::RenderWindow window{{1440, 900}, "TGUI example - SFML_GRAPHICS backend"};
     tgui::Gui gui{window};
 
-    // tgui::Button::Ptr button = tgui::Button::create("text button");
-    // gui.add(button);
-    // drawWelcomeScreen(gui, window);
     cout << "checkpt1";
     Screen screen(gui, window);
     screen.drawWelcomeScreen();

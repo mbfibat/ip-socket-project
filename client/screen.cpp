@@ -1,14 +1,46 @@
 #include "screen.h"
 
+#include <unistd.h>
+
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <chrono>
+#include <iostream>
 #include <thread>
 
 #include "question.h"
 extern Player p;
+void Screen::setBackground() {
+    // get current directory for file path
+    char cwd[1024];
+    std::string filePath;
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        filePath = std::string(cwd);
+    } else {
+        perror("getcwd() error");
+    }
+
+    // set background
+    std::string imagePath = filePath + "/assets/image/background.png";
+    sf::Texture texture;
+    if (!texture.loadFromFile(imagePath)) {
+        std::cout << "Error loading background image\n";
+    }
+    tgui::Picture::Ptr background = tgui::Picture::create(texture);
+    this->gui.add(background);
+
+    // std::string fontPath = filePath + "/assets/font/Montserrat-Regular.ttf";
+
+    // // set font from path
+    // tgui::Theme::Ptr theme = tgui::Theme::create(fontPath);
+    // tgui::Theme::setDefault(theme);
+}
+
 void Screen::drawWelcomeScreen() {
-    std::cout << "Ve Welcome Screen ne pri\n";
     this->gui.removeAllWidgets();
+
+    this->setBackground();
+    std::cout << "Ve Welcome Screen ne pri\n";
 
     tgui::Button::Ptr startBtn = tgui::Button::create("Start");
     startBtn->setPosition(50, 50);
@@ -17,6 +49,8 @@ void Screen::drawWelcomeScreen() {
     tgui::Button::Ptr exitBtn = tgui::Button::create("Exit");
     exitBtn->setPosition(300, 50);
     exitBtn->setSize(200, 50);
+
+    startBtn->getRenderer()->setBackgroundColor(sf::Color::Blue);
 
     this->gui.add(startBtn);
     this->gui.add(exitBtn);
@@ -28,16 +62,10 @@ void Screen::drawWelcomeScreen() {
     std::cout << "Xong Welcome Screen ne pri\n";
 }
 
-/*
-void register_account(tgui::String name)
-{
-    p.register_account(name.toStdString());
-}
-*/
-
 void Screen::drawNamingScreen() {
     std::cout << "GHI TEN DI PRI\n";
     this->gui.removeAllWidgets();
+    this->setBackground();
 
     tgui::EditBox::Ptr nameBox = tgui::EditBox::create();
     nameBox->setSize(600, 85);
@@ -72,6 +100,8 @@ void Screen::waitForQuestion() {
 void Screen::drawWaitingForHostScreen() {
     std::cout << "DOI TI NHE PRI\n";
     this->gui.removeAllWidgets();
+    this->setBackground();
+
     tgui::ChatBox::Ptr textBox = tgui::ChatBox::create();
     textBox->addLine("WAITING FOR HOST");
     this->gui.add(textBox);
@@ -84,6 +114,8 @@ void Screen::drawWaitingForHostScreen() {
 void Screen::drawGameScreen(Question q) {
     std::cout << "VAO GAME NE PRI\n";
     this->gui.removeAllWidgets();
+    this->setBackground();
+
     std::cout << "LA QUA A NHEN\n";
     std::cout << q << '\n';
 
@@ -97,6 +129,9 @@ void Screen::drawGameScreen(Question q) {
     std::cout << "LA QUA A NHEN CAU D NE\n";
     tgui::Button::Ptr skip = tgui::Button::create("Skip");
     std::cout << "LA QUA A NHEN CAU SKIP NE\n";
+
+    tgui::ChatBox::Ptr timerBox = tgui::ChatBox::create();
+    timerBox->setPosition("90%", "10%");
 
     tgui::ChatBox::Ptr questionBox = tgui::ChatBox::create();
     questionBox->addLine(q.title);
@@ -130,4 +165,14 @@ void Screen::drawGameScreen(Question q) {
     buttonC->onPress([=] { p.send_answer("C"); });
     buttonD->onPress([=] { p.send_answer("D"); });
     skip->onPress([=] { p.send_answer("SKIP"); });
+
+    int remaining_time = 10;
+    this->gui.add(timerBox);
+    while (remaining_time > 0) {
+        timerBox->removeAllLines();
+        timerBox->addLine(std::to_string(remaining_time));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        remaining_time--;
+    }
+    if (remaining_time == 0) p.send_answer("No_answer");
 }

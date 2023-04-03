@@ -15,6 +15,7 @@ private:
 public:
     string name;  // player inputted name
     Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
+    void setBackground();
     void drawWelcomeScreen();
     void drawNamingScreen();
     void drawWaitingForHostScreen();
