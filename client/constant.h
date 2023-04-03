@@ -3,6 +3,8 @@
 
 #include <string>
 
+const static int WIDTH = 1440;
+const static int HEIGHT = 900;
 const static int PORT = 5000;
 const static std::string IP = "127.0.0.1";
 

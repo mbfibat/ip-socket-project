@@ -12,7 +12,7 @@
 extern Player p;
 void Screen::setBackground() {
     // get current directory for file path
-    char cwd[1024];
+    char cwd[101];
     std::string filePath;
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         filePath = std::string(cwd);
@@ -29,11 +29,11 @@ void Screen::setBackground() {
     tgui::Picture::Ptr background = tgui::Picture::create(texture);
     this->gui.add(background);
 
-    // std::string fontPath = filePath + "/assets/font/Montserrat-Regular.ttf";
+    std::string fontPath = filePath + "/assets/fonts/Montserrat-Regular.ttf";
 
-    // // set font from path
-    // tgui::Theme::Ptr theme = tgui::Theme::create(fontPath);
-    // tgui::Theme::setDefault(theme);
+    // set font for all widgets in gui to Montserrat Regular font (default is Arial)
+    tgui::Font font(fontPath);
+    this->gui.setFont(font);
 }
 
 void Screen::drawWelcomeScreen() {

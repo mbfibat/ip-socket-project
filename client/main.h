@@ -1,8 +1,9 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <TGUI/TGUI.hpp>
 
 #include "player.h"
