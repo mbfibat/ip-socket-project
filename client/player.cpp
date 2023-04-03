@@ -43,15 +43,19 @@ bool Player::register_account(std::string name) {
 
 // receive the question from server
 Question Player::receive_question() {
-    sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done) {
-        std::cout << "Error receiving packet" << std::endl;
-        return Question();
-    }
+    while (true) {  // Polling for question
+        if (!selector.isReady(socket))
+            continue;
 
-    Question q;
-    recv_packet >> q;
-    return q;
+        sf::Packet recv_packet;
+        if (socket.receive(recv_packet) != sf::Socket::Done) {
+            std::cout << "Error receiving packet" << std::endl;
+            return Question();
+        }
+        Question q;
+        recv_packet >> q;
+        return q;
+    }
 }
 
 // skip the question
