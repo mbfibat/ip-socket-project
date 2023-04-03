@@ -1,7 +1,5 @@
 #include "player.h"
 
-Player p;
-
 Player::Player() {}
 
 // Connect to server, if server is not open return false
@@ -40,6 +38,21 @@ bool Player::register_account(std::string name) {
     recv_packet >> is_valid >> msg;
     LOG("REGISTER", msg);
     return is_valid;
+}
+
+// Receive game info from server
+void Player::receive_game_info() {
+    sf::Packet recv_packet;
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
+        LOG("GAME_INFO", "Error receiving packet");
+        return;
+    }
+
+    int total_player, player_id, total_question;
+    recv_packet >> total_player >> player_id >> total_question;
+    LOG("GAME_INFO", "Total player: " << total_player);
+    LOG("GAME_INFO", "Player id: " << player_id);
+    LOG("GAME_INFO", "Total question: " << total_question);
 }
 
 // receive the question from server

@@ -1,9 +1,8 @@
-
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
 #include "constant.h"
-#include "gameinfo.h"
+#include "main.h"
 #include "question.h"
 
 #define LOG(tag, x) std::cerr << tag << '\t' << x << '\n'
@@ -28,5 +27,7 @@ public:
 
     void test();
 };
+
+extern Player p;
 
 #endif

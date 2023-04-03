@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-extern Player p;
+Player p;
 
 int main() {
     /*
@@ -35,6 +35,8 @@ int main() {
     std::string name;
     cin >> name;
     p.register_account(name);
+
+    p.receive_game_info();
 
     while (true) {
     }

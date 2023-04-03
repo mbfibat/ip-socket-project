@@ -1,10 +1,11 @@
 #include "screen.h"
-#include "question.h"
+
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
-extern Player p;
-void Screen::drawWelcomeScreen()
-{
+
+#include "question.h"
+
+void Screen::drawWelcomeScreen() {
     this->gui.removeAllWidgets();
 
     tgui::Button::Ptr startBtn = tgui::Button::create("Start");
@@ -18,20 +19,16 @@ void Screen::drawWelcomeScreen()
     this->gui.add(startBtn);
     this->gui.add(exitBtn);
 
-    startBtn->onPress([&]
-                      { this->drawNamingScreen(); });
+    startBtn->onPress([&] { this->drawNamingScreen(); });
 
-    exitBtn->onPress([&]
-                     { this->window.close(); });
+    exitBtn->onPress([&] { this->window.close(); });
 }
 
-void register_account(tgui::String name)
-{
+void register_account(tgui::String name) {
     p.register_account(name.toStdString());
 }
 
-void Screen::drawNamingScreen()
-{
+void Screen::drawNamingScreen() {
     this->gui.removeAllWidgets();
 
     tgui::EditBox::Ptr nameBox = tgui::EditBox::create();
@@ -43,19 +40,17 @@ void Screen::drawNamingScreen()
     submitBtn->setPosition("20%", "60%");
 
     nameBox->setTextSize(70);
-    nameBox->setDefaultText(""); // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
+    nameBox->setDefaultText("");  // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
 
     this->gui.add(nameBox);
     this->gui.add(submitBtn);
     nameBox->onReturnKeyPress(&register_account);
-    submitBtn->onPress([=]()
-                       {std::cout<<"adsfasdf"; 
-                        p.register_account(nameBox->getText().toStdString());});
-                        //this->drawWaitingForHostScreen(); });
+    submitBtn->onPress([=]() {std::cout<<"adsfasdf"; 
+                        p.register_account(nameBox->getText().toStdString()); });
+    // this->drawWaitingForHostScreen(); });
 }
 
-void Screen::drawWaitingForHostScreen()
-{
+void Screen::drawWaitingForHostScreen() {
     std::cout << "zzzz";
     this->gui.removeAllWidgets();
     tgui::ChatBox::Ptr textBox = tgui::ChatBox::create();
@@ -65,9 +60,7 @@ void Screen::drawWaitingForHostScreen()
     this->drawGameScreen(q);
 }
 
-void Screen::drawGameScreen(Question q)
-{
-
+void Screen::drawGameScreen(Question q) {
     this->gui.removeAllWidgets();
 
     tgui::Button::Ptr buttonA = tgui::Button::create(q.choice_A);

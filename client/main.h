@@ -5,10 +5,12 @@
 #include <SFML/Network.hpp>
 #include <TGUI/TGUI.hpp>
 
-#include "gameinfo.h"
 #include "player.h"
 #include "question.h"
-// #include "welcomeScreen.h"
 #include "screen.h"
+
+extern int num_players;
+extern int num_questions;
+extern int time_per_question;
 
 #endif
