@@ -1,13 +1,15 @@
 #include "player.h"
 
+Player p;
 const static int PORT = 5000;
 const static std::string IP = "127.0.0.1";
-Player p;
-Player::Player()
-{
+
+// Connect to server
+Player::Player() {
+    socket.setBlocking(false);
+    selector.add(socket);
     sf::Socket::Status status = socket.connect(IP, PORT);
-    if (status != sf::Socket::Done)
-    {
+    if (status != sf::Socket::Done) {
         std::cout << "Error connecting to server" << std::endl;
         return;
     }
@@ -19,20 +21,17 @@ Player::Player()
 // Return false if the nickname is invalid or taken
 // The name is valid if regex ^[a-zA-Z0-9_]{1,10}$ matches
 // The name is taken if the server returns a boolean false
-bool Player::register_account(std::string name)
-{
+bool Player::register_account(std::string name) {
     sf::Packet send_packet;
     std::string action = "register";
     send_packet << action << name;
-    if (socket.send(send_packet) != sf::Socket::Done)
-    {
+    if (socket.send(send_packet) != sf::Socket::Done) {
         std::cout << "Error sending packet" << std::endl;
         return false;
     }
 
     sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done)
-    {
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
         std::cout << "Error receiving packet" << std::endl;
         return false;
     }
@@ -42,11 +41,10 @@ bool Player::register_account(std::string name)
     return is_valid;
 }
 
-Question Player::receive_question()
-{
+// receive the question from server
+Question Player::receive_question() {
     sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done)
-    {
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
         std::cout << "Error receiving packet" << std::endl;
         return Question();
     }
@@ -56,11 +54,36 @@ Question Player::receive_question()
     return q;
 }
 
-void Player::test()
-{
+// skip the question
+void Player::skip_question() {
+    if (!can_skip) return;
+
+    sf::Packet send_packet;
+    std::string action = "skip";
+    send_packet << action;
+    if (socket.send(send_packet) != sf::Socket::Done) {
+        std::cout << "Error sending packet" << std::endl;
+        return;
+    }
+
+    can_skip = false;
+}
+
+// send the answer to server
+void Player::send_answer(std::string answer) {
+    sf::Packet send_packet;
+    std::string action = "answer";
+    send_packet << action << answer;
+    if (socket.send(send_packet) != sf::Socket::Done) {
+        std::cout << "Error sending packet" << std::endl;
+        return;
+    }
+}
+
+// Test kakaka
+void Player::test() {
     sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done)
-    {
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
         std::cout << "Error receiving packet" << std::endl;
         return;
     }
