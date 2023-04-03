@@ -142,23 +142,32 @@ void Game::test() {
     q.choice_C = "177015";
     q.choice_D = "177016";
 
-    sf::Packet send_packet;
-    send_packet << q;
-    for (int i = 0; i < TOTAL_PLAYER; i++) {
-        if (players[i].client->send(send_packet) != sf::Socket::Done) {
+    for (int i = 0; i < 10; i++) {
+        sf::Packet send_packet;
+        send_packet << q;
+        if (players[0].client->send(send_packet) != sf::Socket::Done) {
             LOG("START", "Error sending packet");
             continue;
         }
 
         sf::Packet receive_packet;
 
-        while (!selector.isReady(*players[i].client)) {
+        while (!selector.isReady(*players[0].client)) {
             selector.wait();
         }
-        players[i].client->receive(receive_packet);
+        players[0].client->receive(receive_packet);
         std::string answer;
-        receive_packet >> answer;
-        std::cout << answer << std::endl;
+        receive_packet >> answer >> answer;
+        std::cout << "The client " << 0 << " answer with: " << answer << std::endl;
+        if (answer == "A") {
+            sf::Packet send_packet;
+            send_packet << "CORRECT";
+            players[0].client->send(send_packet);
+        } else {
+            sf::Packet send_packet;
+            send_packet << "WRONG";
+            players[0].client->send(send_packet);
+        }
     }
-    std::cout << "Sent questions to all players\n";
+    std::cout << "Done Test\n";
 }

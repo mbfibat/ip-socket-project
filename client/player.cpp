@@ -94,6 +94,21 @@ void Player::send_answer(std::string answer) {
     }
 }
 
+// receive answer result from server
+// Could be "Correct" or "Wrong" or "Win"
+std::string Player::receive_answer_result() {
+    sf::Packet recv_packet;
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
+        std::cout << "Error receiving packet" << std::endl;
+        return "";
+    }
+
+    std::string result;
+    recv_packet >> result;
+    std::cout << result << std::endl;
+    return result;
+}
+
 // Test kakaka
 void Player::test() {
     sf::Packet recv_packet;
