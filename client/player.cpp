@@ -19,7 +19,8 @@ Player::Player() {
 // The name is taken if the server returns a boolean false
 bool Player::register_account(std::string& name) {
     sf::Packet send_packet;
-    send_packet << name;
+    std::string action = "register";
+    send_packet << action << name;
     if (socket.send(send_packet) != sf::Socket::Done) {
         std::cout << "Error sending packet" << std::endl;
         return false;

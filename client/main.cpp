@@ -3,10 +3,13 @@
 #include <iostream>
 #include <string>
 
-int main()
-{
+int main() {
+    std::string name;
+    std::cin >> name;
+
     Player p;
-    p.test();
+    p.register_account(name);
+
     /*
     p.register_account();
 
@@ -39,11 +42,9 @@ int main()
     // gui.add(button);
     drawWelcomeScreen(gui, window);
 
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             gui.handleEvent(event);
 
             if (event.type == sf::Event::Closed)
