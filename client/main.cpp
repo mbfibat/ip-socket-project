@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <string>
+
 extern Player p;
+
 int main() {
     /*
     p.register_account();
@@ -30,6 +32,14 @@ int main() {
     */
 
     if (!p.connect()) return 0;
+    std::string name;
+    cin >> name;
+    p.register_account(name);
+
+    while (true) {
+    }
+
+    return 0;
 
     sf::RenderWindow window{{800, 600}, "TGUI example - SFML_GRAPHICS backend"};
     tgui::Gui gui{window};

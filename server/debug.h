@@ -3,6 +3,6 @@
 
 #include <iostream>
 
-#define LOG(x) std::cerr << x << '\n';
+#define LOG(tag, x) std::cerr << tag << '\t' << x << '\n'
 
 #endif  // DEBUG_H

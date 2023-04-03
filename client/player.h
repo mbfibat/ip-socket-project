@@ -2,13 +2,18 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+#include "constant.h"
 #include "gameinfo.h"
 #include "question.h"
+
+#define LOG(tag, x) std::cerr << tag << '\t' << x << '\n'
 
 class Player {
 public:
     sf::TcpSocket socket;
     sf::SocketSelector selector;
+
+    Player();
 
     bool can_skip;  // can skip the question only once
 

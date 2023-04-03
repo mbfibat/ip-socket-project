@@ -12,11 +12,14 @@
 #include "player.h"
 #include "question.h"
 
-#define send_result(client, result, msg) \
-    {                                    \
-        sf::Packet p;                    \
-        p << result << msg;              \
-        (client).send(p);                \
+#define send_result(client, result, msg)            \
+    {                                               \
+        sf::Packet p;                               \
+        p << result << msg;                         \
+        if ((client).send(p) != sf::Socket::Done) { \
+            LOG("ERROR", "Error sending packet");   \
+        }                                           \
+        LOG("MSG", msg);                            \
     }
 
 class Game {
@@ -34,7 +37,9 @@ public:
     Game();
 
     bool isValidName(std::string name);
+    bool disconnectPlayer(sf::TcpSocket *client);
     bool registerPlayer(sf::TcpSocket &client, sf::Packet &receive_packet);
+    void gameStart();
 
     void run();
 };

@@ -3,16 +3,14 @@
 
 #include <string>
 
-#define IP "127.0.0.1"
-#define PORT 5000
-#define QUESTIONS_FILE "../data/question.csv"
-#define TOTAL_PLAYER 3
+const static int PORT = 5000;
+const static std::string IP = "127.0.0.1";
+
+#define DELAY_MS 100
 
 #define ACTION_REGISTER "register"
 #define ACTION_ANSWER "answer"
 #define ACTION_SKIP "skip"
 #define ACTION_EXIT "exit"
-
-#define name_pattern "[a-zA-Z0-9_]{1,10}"
 
 #endif  // CONSTANT_H

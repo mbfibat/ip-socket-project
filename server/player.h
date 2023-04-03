@@ -5,9 +5,10 @@
 #include <string>
 
 struct Player {
+    sf::TcpSocket *client;
     std::string name;
 
-    Player(std::string name);
+    Player(std::string name, sf::TcpSocket *client);
 };
 
 #endif  // PLAYER_H
