@@ -1,10 +1,9 @@
 #include "screen.h"
-#include <TGUI/TGUI.hpp>
-#include <SFML/Graphics.hpp>
-extern Player p;
-void Screen::drawWelcomeScreen()
-{
 
+#include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
+extern Player p;
+void Screen::drawWelcomeScreen() {
     this->gui.removeAllWidgets();
 
     tgui::Button::Ptr startBtn = tgui::Button::create("Start");
@@ -18,20 +17,16 @@ void Screen::drawWelcomeScreen()
     this->gui.add(startBtn);
     this->gui.add(exitBtn);
 
-    startBtn->onPress([&]
-                      { this->drawNamingScreen(); });
+    startBtn->onPress([&] { this->drawNamingScreen(); });
 
-    exitBtn->onPress([&]
-                     { this->window.close(); });
+    exitBtn->onPress([&] { this->window.close(); });
 }
 
-void returnName(tgui::String name)
-{
+void returnName(tgui::String name) {
     p.register_account(name.toStdString());
 }
 
-void Screen::drawNamingScreen()
-{
+void Screen::drawNamingScreen() {
     this->gui.removeAllWidgets();
 
     tgui::EditBox::Ptr nameBox = tgui::EditBox::create();
@@ -43,7 +38,7 @@ void Screen::drawNamingScreen()
     submitBtn->setPosition("20%", "60%");
 
     nameBox->setTextSize(70);
-    nameBox->setDefaultText(""); // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
+    nameBox->setDefaultText("");  // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
 
     this->gui.add(nameBox);
     this->gui.add(submitBtn);
@@ -57,9 +52,7 @@ void Screen::drawNamingScreen()
     nameBox->onReturnKeyPress(&returnName);
 }
 
-void Screen::drawGameScreen()
-{
-
+void Screen::drawGameScreen() {
     this->gui.removeAllWidgets();
 
     tgui::Button::Ptr buttonA = tgui::Button::create("A");

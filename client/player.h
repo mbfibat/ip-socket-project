@@ -12,7 +12,7 @@ public:
 
     bool can_skip;  // can skip the question only once
 
-    Player();
+    bool connect();
     void receive_game_info();
     Question receive_question();
 

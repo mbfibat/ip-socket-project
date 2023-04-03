@@ -4,16 +4,25 @@ Player p;
 const static int PORT = 5000;
 const static std::string IP = "127.0.0.1";
 
-// Connect to server
-Player::Player() {
-    socket.setBlocking(false);
+// Connect to server, if server is not open return false
+bool Player::connect() {
+    // socket.setBlocking(false);
     selector.add(socket);
     sf::Socket::Status status = socket.connect(IP, PORT);
+    sf::sleep(sf::milliseconds(100));
+    while (status == sf::Socket::NotReady) {
+        // Connection in progress, wait for a little while
+        sf::sleep(sf::milliseconds(100));
+
+        // Check the connection status again
+        status = socket.connect(IP, PORT);
+    }
     if (status != sf::Socket::Done) {
         std::cout << "Error connecting to server" << std::endl;
-        return;
+        return false;
     }
     std::cout << "Connected to server" << std::endl;
+    return true;
 }
 
 // Register a nickname for the player and send it to the server

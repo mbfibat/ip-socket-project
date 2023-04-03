@@ -1,7 +1,7 @@
 #ifndef welcomeScreen_h
 #define welcomeScreen_h
-#include <TGUI/TGUI.hpp>
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
 void drawWelcomeScreen(tgui::Gui &gui, sf::RenderWindow &window);
 void drawNamingScreen(tgui::Gui &gui);
