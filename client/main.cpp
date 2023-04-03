@@ -41,7 +41,6 @@ int main() {
 
     tgui::Gui gui{window};
 
-    cout << "checkpt1";
     Screen screen(gui, window);
     screen.drawWelcomeScreen();
 
@@ -52,6 +51,18 @@ int main() {
 
             if (event.type == sf::Event::Closed)
                 window.close();
+        }
+
+        if (screen.inTimer)
+            std::cout << screen.timer.getElapsedTime().asSeconds() << " s" << std::endl;
+        if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= 10) {
+            screen.inTimer = false;
+            screen.timer.restart();
+            p.send_answer("NOP");
+            p.receive_answer_result();
+
+            // screen.drawGameLoserScreen();
+            screen.drawWaitingForHostScreen();
         }
 
         window.clear();

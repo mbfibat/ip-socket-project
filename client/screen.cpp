@@ -4,10 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
-#include <chrono>
 #include <iostream>
-#include <memory>
-#include <thread>
 
 #include "question.h"
 extern Player p;
@@ -58,9 +55,9 @@ void Screen::drawWelcomeScreen() {
     this->gui.add(startBtn);
     this->gui.add(exitBtn);
 
-    startBtn->onPress([&] { this->drawNamingScreen(); });
+    startBtn->onPress([=] { this->drawNamingScreen(); });
 
-    exitBtn->onPress([&] { this->window.close(); });
+    exitBtn->onPress([=] { this->window.close(); });
 
     std::cout << "Xong Welcome Screen ne pri\n";
 }
@@ -92,29 +89,24 @@ void Screen::drawNamingScreen() {
     std::cout << "XONG HAM NHE PRI\n";
 }
 
-void Screen::waitForQuestion() {
-    cout << "CHO CAU HOI NE PRI\n";
-    Question q = p.receive_question();
-    cout << "CO CAU HOI ROI NE PRI\n";
-    cout << q << '\n';
-
-    this->drawGameScreen(q);
-}
-
 void Screen::drawWaitingForHostScreen() {
     std::cout << "DOI TI NHE PRI\n";
     this->gui.removeAllWidgets();
     this->setBackground();
-    std::cout << "SET BACKGROUND XONG ROI NHE PRI\n";
 
     std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
     textBox->addLine("WAITING FOR HOST");
     this->gui.add(textBox);
 
-    std::cout << "CHAY DEN DAY ROI NHE PRI\n";
-    std::thread t(&Screen::waitForQuestion, this);
-    t.detach();
+    this->window.clear();
+    this->gui.draw();
+    this->window.display();
+
+    Question q = p.receive_question();
+    std::cout << "CAU HOI NE PRI\n";
+    std::cout << q << '\n';
     std::cout << "DOI XONG ROI NHE PRI\n";
+    this->drawGameScreen(q);
 }
 
 void Screen::drawGameScreen(Question q) {
@@ -156,10 +148,17 @@ void Screen::drawGameScreen(Question q) {
     this->gui.add(buttonC);
     this->gui.add(buttonD);
     this->gui.add(questionBox);
-    this->gui.add(skip);
+
+    if (!p.can_skip)
+        this->gui.add(skip);
+
     std::cout << "XONG GAME NE PRI\n";
 
+    this->inTimer = true;
+    this->timer.restart();
+
     buttonA->onPress([=] { 
+        this->inTimer = false;
         p.send_answer("A"); 
         string result = p.receive_answer_result();
         if (result == "CORRECT") {
@@ -169,51 +168,46 @@ void Screen::drawGameScreen(Question q) {
         } });
 
     buttonB->onPress([=] { 
+        this->inTimer = false;
         p.send_answer("B"); 
         string result = p.receive_answer_result();
         if (result == "CORRECT") {
             this->drawWaitingForHostScreen(); 
         } else {
             //this->drawGameOverScreen(); Ve con amogus
+            this->drawWaitingForHostScreen();
         } });
 
     buttonC->onPress([=] {
+        this->inTimer = false;
         p.send_answer("C"); 
         string result = p.receive_answer_result();
         if (result == "CORRECT") {
             this->drawWaitingForHostScreen(); 
         } else {
             //this->drawGameOverScreen(); Ve con amogus
+            this->drawWaitingForHostScreen();
         } });
 
     buttonD->onPress([=] {
+        this->inTimer = false;
         p.send_answer("D"); 
         string result = p.receive_answer_result();
         if (result == "CORRECT") {
             this->drawWaitingForHostScreen(); 
         } else {
             //this->drawGameOverScreen(); Ve con amogus
+            this->drawWaitingForHostScreen();
         } });
 
-    // TODO: Chỉ skip được nếu biến can_skip = true
-    skip->onPress([=] { p.send_answer("SKIP"); });
+    skip->onPress([=] {
+        this->inTimer = false;
+        p.can_skip = true;
+        p.send_answer("SKIP");
+        p.receive_answer_result();
 
-    int remaining_time = 2;
-    this->gui.add(timerBox);
-    while (remaining_time >= 0) {
-        cout << "Remaining time: " << remaining_time << '\n';
-        timerBox->removeAllLines();
-        timerBox->addLine(std::to_string(remaining_time));
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        remaining_time--;
-    }
-    auto par = timerBox->getParent();
-    cout << "Parent: " << par << '\n';
-    if (par != nullptr) {
-        p.send_answer("NOP");
-        std::string result = p.receive_answer_result();
         this->drawWaitingForHostScreen();
-    }
+    });
 }
 
 // TODO: DrawGameOverScreen
