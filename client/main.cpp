@@ -37,6 +37,7 @@ int main() {
     // tgui::Button::Ptr button = tgui::Button::create("text button");
     // gui.add(button);
     // drawWelcomeScreen(gui, window);
+    cout << "checkpt1";
     Screen screen(gui, window);
     screen.drawWelcomeScreen();
 

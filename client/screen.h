@@ -3,6 +3,7 @@
 #include <TGUI/TGUI.hpp>
 #include <SFML/Graphics.hpp>
 #include "player.h"
+#include "question.h"
 using namespace std;
 
 class Screen
@@ -16,7 +17,10 @@ public:
     Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
     void drawWelcomeScreen();
     void drawNamingScreen();
-    void drawGameScreen();
+    void drawWaitingForHostScreen();
+    void drawGameScreen(Question q);
 };
+
+void register_account(tgui::String name);
 
 #endif
