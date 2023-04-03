@@ -47,10 +47,11 @@ void Screen::drawNamingScreen()
 
     this->gui.add(nameBox);
     this->gui.add(submitBtn);
-    nameBox->onReturnOrUnfocus(&register_account);
-    submitBtn->onPress([&]
-                       {std::cout<<"adsfasdf";
-                        this->drawWaitingForHostScreen(); });
+    nameBox->onReturnKeyPress(&register_account);
+    submitBtn->onPress([=]()
+                       {std::cout<<"adsfasdf"; 
+                        p.register_account(nameBox->getText().toStdString());});
+                        //this->drawWaitingForHostScreen(); });
 }
 
 void Screen::drawWaitingForHostScreen()
