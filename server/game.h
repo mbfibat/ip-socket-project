@@ -40,6 +40,8 @@ public:
     bool disconnectPlayer(sf::TcpSocket *client);
     bool registerPlayer(sf::TcpSocket &client, sf::Packet &receive_packet);
     void gameStart();
+    bool registerPlayer(sf::TcpSocket &client, Player &player);
+    void test();
 
     void run();
 };

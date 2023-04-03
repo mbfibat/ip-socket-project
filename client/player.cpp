@@ -57,19 +57,14 @@ void Player::receive_game_info() {
 
 // receive the question from server
 Question Player::receive_question() {
-    while (true) {  // Polling for question
-        if (!selector.isReady(socket))
-            continue;
-
-        sf::Packet recv_packet;
-        if (socket.receive(recv_packet) != sf::Socket::Done) {
-            std::cout << "Error receiving packet" << std::endl;
-            return Question();
-        }
-        Question q;
-        recv_packet >> q;
-        return q;
+    sf::Packet recv_packet;
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
+        std::cout << "Error receiving packet" << std::endl;
+        return Question();
     }
+    Question q;
+    recv_packet >> q;
+    return q;
 }
 
 // skip the question

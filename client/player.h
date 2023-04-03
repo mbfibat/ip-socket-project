@@ -10,7 +10,6 @@
 class Player {
 public:
     sf::TcpSocket socket;
-    sf::SocketSelector selector;
 
     Player();
 

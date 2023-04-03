@@ -118,7 +118,8 @@ void Game::run() {
                             registerPlayer(*client, receive_packet);
 
                             if (players.size() == TOTAL_PLAYER) {
-                                gameStart();
+                                test();  // TEST TI NHE PRI, CO GI XOA DI
+                                // gameStart(); // VOI LAI CO VE KHONG CAN CAI NAY DAU NHE PRI
                             }
                         } else if (action == ACTION_ANSWER) {
                         } else if (action == ACTION_SKIP) {
@@ -131,4 +132,19 @@ void Game::run() {
             }
         }
     }
+}
+
+void Game::test() {
+    Question q;
+    q.title = "Which one is the nhentai code for metamorphosis?";
+    q.choice_A = "177013";
+    q.choice_B = "177014";
+    q.choice_C = "177015";
+    q.choice_D = "177016";
+
+    sf::Packet send_packet;
+    send_packet << q;
+    for (int i = 0; i < TOTAL_PLAYER; i++)
+        (*clients[i]).send(send_packet);
+    std::cout << "Sent questions to all players\n";
 }

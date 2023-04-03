@@ -7,6 +7,7 @@
 #include <string>
 
 struct Question {
+    Question() {}
     Question(std::string line);
 
     std::string title;

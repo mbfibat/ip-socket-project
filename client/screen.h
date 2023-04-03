@@ -18,6 +18,8 @@ public:
     void drawWelcomeScreen();
     void drawNamingScreen();
     void drawWaitingForHostScreen();
+
+    void waitForQuestion();
     void drawGameScreen(Question q);
 };
 
