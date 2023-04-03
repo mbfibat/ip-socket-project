@@ -1,7 +1,7 @@
 #include "screen.h"
 #include <TGUI/TGUI.hpp>
 #include <SFML/Graphics.hpp>
-
+extern Player p;
 void Screen::drawWelcomeScreen()
 {
 
@@ -25,9 +25,9 @@ void Screen::drawWelcomeScreen()
                      { this->window.close(); });
 }
 
-void caichet(tgui::String name)
+void returnName(tgui::String name)
 {
-    this->name = name;
+    p.register_account(name.toStdString());
 }
 
 void Screen::drawNamingScreen()
@@ -54,7 +54,7 @@ void Screen::drawNamingScreen()
     //         this->name = nameBox->getText();
     //     else
     //         cout << "error here"; });
-    nameBox->onReturnKeyPress(&caichet);
+    nameBox->onReturnKeyPress(&returnName);
 }
 
 void Screen::drawGameScreen()

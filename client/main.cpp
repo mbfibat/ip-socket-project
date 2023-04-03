@@ -2,14 +2,11 @@
 
 #include <iostream>
 #include <string>
-
+extern Player p;
 int main()
 {
-    std::string name;
-    std::cin >> name;
 
-    Player p;
-    p.register_account(name);
+    // Player p;
 
     /*
     p.register_account();

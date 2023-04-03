@@ -5,15 +5,17 @@
 #include "gameinfo.h"
 #include "question.h"
 
-class Player {
+class Player
+{
 public:
     sf::TcpSocket socket;
 
     Player();
     void receive_game_info();
     Question receive_question();
-    bool register_account(std::string& name);
+    bool register_account(std::string name);
 
     void test();
 };
+
 #endif
