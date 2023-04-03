@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 
-int main() {
+int main()
+{
     Player p;
     p.test();
     /*
@@ -36,14 +37,17 @@ int main() {
 
     // tgui::Button::Ptr button = tgui::Button::create("text button");
     // gui.add(button);
-    drawWelcomeScreen(gui);
+    drawWelcomeScreen(gui, window);
 
-    while (window.isOpen()) {
+    while (window.isOpen())
+    {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event))
+        {
             gui.handleEvent(event);
 
-            if (event.type == sf::Event::Closed) window.close();
+            if (event.type == sf::Event::Closed)
+                window.close();
         }
 
         window.clear();
