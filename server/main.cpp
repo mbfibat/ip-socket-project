@@ -1,6 +1,8 @@
 #include "game.h"
 
 int main() {
-    Game game;
-    game.run();
+    while (true) {
+        Game game;
+        game.run();
+    }
 }

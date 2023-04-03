@@ -6,6 +6,8 @@
 
 struct Player {
     std::string name;
+
+    Player(std::string name);
 };
 
 #endif  // PLAYER_H
