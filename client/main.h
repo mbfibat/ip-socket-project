@@ -8,6 +8,7 @@
 #include "gameinfo.h"
 #include "player.h"
 #include "question.h"
-#include "welcomeScreen.h"
+// #include "welcomeScreen.h"
+#include "screen.h"
 
 #endif

@@ -3,7 +3,8 @@
 #include <iostream>
 #include <string>
 
-int main() {
+int main()
+{
     std::string name;
     std::cin >> name;
 
@@ -40,11 +41,15 @@ int main() {
 
     // tgui::Button::Ptr button = tgui::Button::create("text button");
     // gui.add(button);
-    drawWelcomeScreen(gui, window);
+    // drawWelcomeScreen(gui, window);
+    Screen screen(gui, window);
+    screen.drawWelcomeScreen();
 
-    while (window.isOpen()) {
+    while (window.isOpen())
+    {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event))
+        {
             gui.handleEvent(event);
 
             if (event.type == sf::Event::Closed)

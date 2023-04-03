@@ -42,15 +42,19 @@ void Screen::drawNamingScreen()
     this->gui.add(nameBox);
     this->gui.add(submitBtn);
 
-    nameBox->onReturnKeyPress(&nameEnter);
-
+    nameBox->setFocused(true);
+    // submitBtn->onPress([&]
+    //                    { this->drawGameScreen(); });
     submitBtn->onPress([&]
-                       { this->drawGameScreen(); });
-}
+                       {
+                           if (nameBox->isFocused())
+                               this->name = nameBox->getText();
+                           else
+                               cout << "error here";
 
-void Screen::nameEnter(tgui::String text)
-{
-    this->name = text.toStdString();
+                           //  stdname = name.toStdString();
+                           //  std::cout << "Text entered: " << stdname << std::endl;
+                       });
 }
 
 void Screen::drawGameScreen()

@@ -8,8 +8,7 @@ class Screen
 private:
     tgui::Gui &gui;
     sf::RenderWindow &window;
-    std::string name;
-    void nameEnter(tgui::String text);
+    tgui::String name;
 
 public:
     Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
