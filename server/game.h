@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML/Network.hpp>
+#include <fstream>
 #include <iostream>
 #include <regex>
 #include <vector>

@@ -13,6 +13,11 @@ Game::Game() {
     selector.add(listener);
 
     // Load question
+    std::ifstream file(QUESTIONS_FILE);
+    std::string line;
+    while (std::getline(file, line)) {
+        questions.push_back(Question(line));
+    }
 }
 
 bool Game::isValidName(std::string name) {
