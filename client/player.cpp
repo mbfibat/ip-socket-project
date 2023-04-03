@@ -73,7 +73,7 @@ void Player::skip_question() {
         return;
 
     sf::Packet send_packet;
-    std::string action = "skip";
+    std::string action = ACTION_SKIP;
     send_packet << action;
     if (socket.send(send_packet) != sf::Socket::Done) {
         std::cout << "Error sending packet" << std::endl;
@@ -86,7 +86,7 @@ void Player::skip_question() {
 // send the answer to server
 void Player::send_answer(std::string answer) {
     sf::Packet send_packet;
-    std::string action = "answer";
+    std::string action = ACTION_ANSWER;
     send_packet << action << answer;
     if (socket.send(send_packet) != sf::Socket::Done) {
         std::cout << "Error sending packet" << std::endl;

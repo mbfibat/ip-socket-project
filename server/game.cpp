@@ -144,7 +144,21 @@ void Game::test() {
 
     sf::Packet send_packet;
     send_packet << q;
-    for (int i = 0; i < TOTAL_PLAYER; i++)
-        (*clients[i]).send(send_packet);
+    for (int i = 0; i < TOTAL_PLAYER; i++) {
+        if (players[i].client->send(send_packet) != sf::Socket::Done) {
+            LOG("START", "Error sending packet");
+            continue;
+        }
+
+        sf::Packet receive_packet;
+
+        while (!selector.isReady(*players[i].client)) {
+            selector.wait();
+        }
+        players[i].client->receive(receive_packet);
+        std::string answer;
+        receive_packet >> answer;
+        std::cout << answer << std::endl;
+    }
     std::cout << "Sent questions to all players\n";
 }
