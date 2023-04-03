@@ -6,17 +6,11 @@ set(CMAKE_CXX_COMPILER "g++")
 project(ipsocket)
 
 # Add client source files
-set (CLIENT_SOURCES
-    client/main.cpp
-    client/player.cpp
-    client/welcomeScreen.cpp
-) 
+file(GLOB CLIENT_SOURCES "client/*.h" "client/*.cpp")
 add_executable(client ${CLIENT_SOURCES})
 
 # Add server source files
-set (SERVER_SOURCES
-    server/main.cpp
-)
+file(GLOB SERVER_SOURCES "server/*.h" "server/*.cpp")
 add_executable(server ${SERVER_SOURCES})
 
 # Add SFML components to executables

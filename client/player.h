@@ -2,7 +2,8 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "packet.h"
+#include "gameinfo.h"
+#include "question.h"
 
 class Player {
 public:

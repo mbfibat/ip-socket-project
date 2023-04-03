@@ -1,32 +1,22 @@
-#include <string>
-#include <iostream>
 #include <SFML/Network.hpp>
+#include <iostream>
+#include <string>
 
-const std::string IP = "127.0.0.1";
-const int PORT = 5000;
+#include "constant.h"
+#include "question.h"
 
-struct Question {
-    std::string title;
-    std::string choice_A, choice_B, choice_C, choice_D;
-};
+#define perr(result, msg)              \
+    if (result != sf::Socket::Done) {  \
+        std::cout << msg << std::endl; \
+        return 1;                      \
+    }
 
-sf::Packet& operator <<(sf::Packet& packet, const Question& q) {
-    return packet << q.title << q.choice_A << q.choice_B << q.choice_C << q.choice_D;
-}
-
-int main()
-{
+int main() {
     sf::TcpListener listener;
-    if (listener.listen(PORT) != sf::Socket::Done) {
-        std::cout << "Error listening to port " << PORT << std::endl;
-        return 1;
-    }
-    
+    perr(listener.listen(PORT), "Error listening on port " << PORT);
+
     sf::TcpSocket client;
-    if (listener.accept(client) != sf::Socket::Done) {
-        std::cout << "Error accepting client" << std::endl;
-        return 1;
-    }
+    perr(listener.accept(client), "Error accepting client");
 
     Question q;
     q.title = "Which one is the nhentai code for metamorphosis?";
@@ -37,8 +27,5 @@ int main()
 
     sf::Packet send_packet;
     send_packet << q;
-    if (client.send(send_packet) != sf::Socket::Done) {
-        std::cout << "Error sending packet" << std::endl;
-        return 1;
-    }
+    perr(client.send(send_packet), "Error sending packet");
 }

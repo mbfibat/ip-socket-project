@@ -1,6 +1,4 @@
 #include "welcomeScreen.h"
-#include <TGUI/TGUI.hpp>
-#include <SFML/Graphics.hpp>
 
 void drawWelcomeScreen(tgui::Gui& gui) {
     gui.removeAllWidgets();
