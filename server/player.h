@@ -7,6 +7,8 @@
 struct Player {
     sf::TcpSocket *client;
     std::string name;
+    bool alive;
+    bool skipped;
 
     Player(std::string name, sf::TcpSocket *client);
 };

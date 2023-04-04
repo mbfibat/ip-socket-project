@@ -14,10 +14,10 @@
 #include "question.h"
 #include "random.h"
 
-#define send_result(client, result, msg)            \
+#define send_result(client, code, msg)              \
     {                                               \
         sf::Packet p;                               \
-        p << result << msg;                         \
+        p << code << msg;                           \
         if ((client).send(p) != sf::Socket::Done) { \
             LOG_ERROR("Error sending result");      \
         }                                           \
@@ -47,13 +47,14 @@ public:
     bool disconnectPlayer(sf::TcpSocket *client);
     void gameStart();
     void sendQuestion();
+    int countAlivePlayer();
+    bool checkCorrectTurn(sf::TcpSocket &client);
 
     // handler
     void handleNewConnection();
     void handleRegister(sf::TcpSocket &client, sf::Packet &packet);
     void handleAnswer(sf::TcpSocket &client, sf::Packet &packet);
     void handleSkip(sf::TcpSocket &client, sf::Packet &packet);
-    void handleExit(sf::TcpSocket &client, sf::Packet &packet);
 
     void run();
 };

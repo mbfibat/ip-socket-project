@@ -8,12 +8,24 @@ bool Game::isValidName(std::string name) {
     return std::regex_match(name, std::regex(name_pattern));
 }
 
+int Game::countAlivePlayer() {
+    int count = 0;
+    for (int i = 0; i < players.size(); i++) {
+        if (players[i].alive) count++;
+    }
+    return count;
+}
+
+bool Game::checkCorrectTurn(sf::TcpSocket &client) {
+    return players[currentPlayer].client == &client;
+}
+
 bool Game::disconnectPlayer(sf::TcpSocket *client) {
     LOG_INFO("Client " << client->getRemoteAddress() << " disconnected");
     for (int i = 0; i < players.size(); i++) {
         if (players[i].client == client) {
             LOG_INFO("Player " << players[i].name << " disconnected");
-            players.erase(players.begin() + i);
+            players[i].alive = false;
             break;
         }
     }
@@ -25,7 +37,7 @@ bool Game::disconnectPlayer(sf::TcpSocket *client) {
 bool Game::registerPlayer(sf::TcpSocket &client, std::string name) {
     if (!isValidName(name)) {
         LOG_INFO("Invalid name: " << name);
-        send_result(client, false, "Invalid name");
+        send_result(client, CODE_ERROR, "Invalid name");
         return false;
     }
 
@@ -33,7 +45,7 @@ bool Game::registerPlayer(sf::TcpSocket &client, std::string name) {
     players.push_back(Player(name, &client));
 
     LOG_INFO("Player " << name << " registered");
-    send_result(client, true, "Register successfully");
+    send_result(client, CODE_SUCCESS, "Register successfully");
     return true;
 }
 
@@ -60,6 +72,17 @@ void Game::gameStart() {
 }
 
 void Game::sendQuestion() {
+    if (countAlivePlayer() == 0) {
+        LOG_INFO("No player alive");
+        running = false;
+        return;
+    }
+
+    // Find alive player
+    while (!players[currentPlayer].alive) {
+        currentPlayer = (currentPlayer + 1) % players.size();
+    }
+
     // Send question
     sf::Packet p;
     p << questions[selectedQuestion[currentQuestion]];

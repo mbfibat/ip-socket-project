@@ -61,8 +61,9 @@ void Game::run() {
                         if (action == ACTION_REGISTER) {
                             handleRegister(*client, receive_packet);
                         } else if (action == ACTION_ANSWER) {
+                            handleAnswer(*client, receive_packet);
                         } else if (action == ACTION_SKIP) {
-                        } else if (action == ACTION_EXIT) {
+                            handleSkip(*client, receive_packet);
                         } else {
                             LOG_ERROR("Invalid action");
                         }
