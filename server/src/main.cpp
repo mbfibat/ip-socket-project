@@ -1,8 +1,9 @@
 #include "../include/game.h"
 
 int main() {
+    Game game;
     while (true) {
-        Game game;
+        game.init();
         game.run();
     }
 }

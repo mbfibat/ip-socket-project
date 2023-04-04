@@ -40,6 +40,8 @@ class Game {
 public:
     Game();
     ~Game();
+    void init();
+    void run();
 
     bool isValidName(std::string name);
     bool registerPlayer(sf::TcpSocket &client, std::string name);
@@ -53,8 +55,6 @@ public:
     void handleRegister(sf::TcpSocket &client, sf::Packet &packet);
     void handleAnswer(sf::TcpSocket &client, sf::Packet &packet);
     void handleSkip(sf::TcpSocket &client, sf::Packet &packet);
-
-    void run();
 };
 
 #endif  // GAME_H

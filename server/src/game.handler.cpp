@@ -22,7 +22,9 @@ void Game::handleRegister(sf::TcpSocket &client, sf::Packet &packet) {
 
     std::string name;
     packet >> name;
-    registerPlayer(client, name);
+    if (!registerPlayer(client, name)) {
+        return;
+    }
 
     if (players.size() == TOTAL_PLAYER) {
         gameStart();
@@ -46,16 +48,6 @@ void Game::handleAnswer(sf::TcpSocket &client, sf::Packet &packet) {
         LOG_INFO("Player " << players[currentPlayer].name << " is the last one, he/she is a winner");
         running = false;
         send_result(client, CODE_WIN, "You are the last one, you are a winner");
-        return;
-    }
-
-    // If the player chooses to move his/her turn (only if this option is
-    // available), the server will move that question to the next player.
-    if (answer[0] == 's') {
-        LOG_INFO("Player " << players[currentPlayer].name << " skipped");
-        currentPlayer = (currentPlayer + 1) % players.size();
-        send_result(client, CODE_SUCCESS, "Skipped");
-        sendQuestion();
         return;
     }
 

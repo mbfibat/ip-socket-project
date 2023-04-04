@@ -6,7 +6,7 @@ Player::Player() {
         LOG("CONNECT", "Error connecting to server");
         exit(0);
     }
-    LOG("CONNECT", "Connected to server");
+    LOG_INFO("Connected to server");
 }
 
 // Register a nickname for the player and send it to the server

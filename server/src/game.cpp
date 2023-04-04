@@ -1,8 +1,6 @@
 #include "../include/game.h"
 
 Game::Game() {
-    running = true;
-
     // Open listener
     if (listener.listen(PORT) != sf::Socket::Done) {
         LOG_ERROR("Error opening listener");
@@ -24,9 +22,20 @@ Game::Game() {
 }
 
 Game::~Game() {
+    listener.close();
     for (auto &client : clients) {
         delete client;
     }
+}
+
+void Game::init() {
+    running = true;
+    currentPlayer = 0;
+    currentQuestion = 0;
+    totalQuestion = 0;
+
+    players.clear();
+    selectedQuestion.clear();
 }
 
 void Game::run() {
