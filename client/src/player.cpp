@@ -17,27 +17,27 @@ bool Player::connect() {
 // Return false if the nickname is invalid or taken
 // The name is valid if regex ^[a-zA-Z0-9_]{1,10}$ matches
 // The name is taken if the server returns a boolean false
-bool Player::register_account(std::string name) {
+int Player::register_account(std::string name) {
     sf::Packet send_packet;
     std::string action = ACTION_REGISTER;
     send_packet << action << name;
 
     if (socket.send(send_packet) != sf::Socket::Done) {
         LOG("REGISTER", "Error sending packet");
-        return false;
+        return CODE_ERROR;
     }
 
     sf::Packet recv_packet;
     if (socket.receive(recv_packet) != sf::Socket::Done) {
         LOG("REGISTER", "Error receiving packet");
-        return false;
+        return CODE_ERROR;
     }
 
-    bool is_valid;
+    int RETURN_CODE;
     std::string msg;
-    recv_packet >> is_valid >> msg;
+    recv_packet >> RETURN_CODE >> msg;
     LOG("REGISTER", msg);
-    return is_valid;
+    return RETURN_CODE;
 }
 
 // Receive game info from server
@@ -96,17 +96,17 @@ void Player::send_answer(std::string answer) {
 
 // receive answer result from server
 // Could be "Correct" or "Wrong" or "Win"
-std::string Player::receive_answer_result() {
+int Player::receive_answer_result() {
     sf::Packet recv_packet;
     if (socket.receive(recv_packet) != sf::Socket::Done) {
         std::cout << "Error receiving packet" << std::endl;
-        return "";
+        return CODE_ERROR;
     }
 
-    std::string result;
-    recv_packet >> result;
-    std::cout << result << std::endl;
-    return result;
+    int RETURN_CODE;
+    recv_packet >> RETURN_CODE;
+    std::cout << RETURN_CODE << std::endl;
+    return RETURN_CODE;
 }
 
 // Test kakaka

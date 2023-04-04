@@ -15,4 +15,12 @@ const static std::string IP = "127.0.0.1";
 #define ACTION_SKIP "skip"
 #define ACTION_EXIT "exit"
 
+#define CODE_ERROR -1
+#define CODE_SUCCESS 0
+#define CODE_WIN 1
+#define CODE_LOSE 2
+#define CODE_CORRECT 3
+#define CODE_WRONG_TURN 4
+#define CODE_ALREADY_SKIP 5
+
 #endif  // CONSTANT_H

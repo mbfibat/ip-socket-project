@@ -23,6 +23,8 @@ public:
     void drawNamingScreen();
     void drawWaitingForHostScreen();
     void drawGameScreen(Question q);
+    void drawWinScreen();
+    void drawGameOverScreen();
 };
 
 void register_account(tgui::String name);

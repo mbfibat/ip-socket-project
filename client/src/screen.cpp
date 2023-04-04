@@ -83,10 +83,11 @@ void Screen::drawNamingScreen() {
     this->gui.add(submitBtn);
     // nameBox->onReturnKeyPress(&register_account);
     submitBtn->onPress([=] {
-                        if (!p.register_account(nameBox->getText().toStdString()))
-                            this->drawNamingScreen();
-                        else 
-                            this->drawWaitingForHostScreen(); });
+        if (p.register_account(nameBox->getText().toStdString()) != CODE_SUCCESS)
+            this->drawNamingScreen();
+        else {
+            this->drawWaitingForHostScreen();
+        } });
     std::cout << "XONG HAM NHE PRI\n";
 }
 
@@ -103,6 +104,7 @@ void Screen::drawWaitingForHostScreen() {
     this->gui.draw();
     this->window.display();
 
+    p.receive_game_info();
     Question q = p.receive_question();
     std::cout << "CAU HOI NE PRI\n";
     std::cout << q << '\n';
@@ -115,8 +117,6 @@ void Screen::drawGameScreen(Question q) {
     this->gui.removeAllWidgets();
     this->setBackground();
 
-    std::cout << "LA QUA A NHEN\n";
-
     std::shared_ptr<tgui::Button> buttonA = tgui::Button::create(q.choice_A);
     std::shared_ptr<tgui::Button> buttonB = tgui::Button::create(q.choice_B);
     std::shared_ptr<tgui::Button> buttonC = tgui::Button::create(q.choice_C);
@@ -128,8 +128,6 @@ void Screen::drawGameScreen(Question q) {
 
     std::shared_ptr<tgui::ChatBox> questionBox = tgui::ChatBox::create();
     questionBox->addLine(q.title);
-
-    std::cout << "CHOI GAME NE PRI\n";
 
     buttonA->setSize(200, 50);
     buttonB->setSize(200, 50);
@@ -153,7 +151,7 @@ void Screen::drawGameScreen(Question q) {
     if (!p.can_skip)
         this->gui.add(skip);
 
-    std::cout << "XONG GAME NE PRI\n";
+    std::cout << "CHOI GAME NE PRI\n";
 
     this->inTimer = true;
     this->timer.restart();
@@ -161,55 +159,87 @@ void Screen::drawGameScreen(Question q) {
     buttonA->onPress([=] { 
         this->inTimer = false;
         p.send_answer("A"); 
-        string result = p.receive_answer_result();
-        if (result == "CORRECT") {
+        int RETURN_CODE = p.receive_answer_result();
+        if (RETURN_CODE == CODE_CORRECT) {
             this->drawWaitingForHostScreen(); 
         } else {
-            //this->drawGameOverScreen(); Ve con amogus
+            this->drawGameOverScreen();
         } });
 
     buttonB->onPress([=] { 
         this->inTimer = false;
         p.send_answer("B"); 
-        string result = p.receive_answer_result();
-        if (result == "CORRECT") {
+        int RETURN_CODE = p.receive_answer_result();
+        if (RETURN_CODE == CODE_CORRECT) {
             this->drawWaitingForHostScreen(); 
         } else {
-            //this->drawGameOverScreen(); Ve con amogus
-            this->drawWaitingForHostScreen();
+            this->drawGameOverScreen();
         } });
 
     buttonC->onPress([=] {
         this->inTimer = false;
         p.send_answer("C"); 
-        string result = p.receive_answer_result();
-        if (result == "CORRECT") {
+        int RETURN_CODE = p.receive_answer_result();
+        if (RETURN_CODE == CODE_CORRECT) {
             this->drawWaitingForHostScreen(); 
         } else {
-            //this->drawGameOverScreen(); Ve con amogus
-            this->drawWaitingForHostScreen();
+            this->drawGameOverScreen();
         } });
 
     buttonD->onPress([=] {
         this->inTimer = false;
         p.send_answer("D"); 
-        string result = p.receive_answer_result();
-        if (result == "CORRECT") {
+        int RETURN_CODE = p.receive_answer_result();
+        if (RETURN_CODE == CODE_CORRECT) {
             this->drawWaitingForHostScreen(); 
         } else {
-            //this->drawGameOverScreen(); Ve con amogus
-            this->drawWaitingForHostScreen();
+            this->drawGameOverScreen();
         } });
 
     skip->onPress([=] {
         this->inTimer = false;
         p.can_skip = true;
         p.send_answer("SKIP");
-        p.receive_answer_result();
+        int RETURN_CODE = p.receive_answer_result();
+        if (RETURN_CODE == CODE_SUCCESS) {
+            this->drawWaitingForHostScreen();
+        } else {
+            this->drawGameOverScreen(); 
+        } });
 
-        this->drawWaitingForHostScreen();
-    });
+    std::cout << "XONG GAME NE PRI\n";
 }
 
-// TODO: DrawGameOverScreen
+void Screen::drawWinScreen() {
+    std::cout << "WIN SCREEN NE PRI\n";
+    this->gui.removeAllWidgets();
+    this->setBackground();
+
+    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    textBox->addLine("YOU WIN");
+    this->gui.add(textBox);
+
+    this->window.clear();
+    this->gui.draw();
+    this->window.display();
+
+    std::cout << "XONG WIN SCREEN NE PRI\n";
+}
+
+void Screen::drawGameOverScreen() {
+    std::cout << "GAME OVER SCREEN NE PRI\n";
+    this->gui.removeAllWidgets();
+    this->setBackground();
+
+    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    textBox->addLine("GAME OVER");
+    this->gui.add(textBox);
+
+    this->window.clear();
+    this->gui.draw();
+    this->window.display();
+
+    std::cout << "XONG GAME OVER SCREEN NE PRI\n";
+}
+// TODO: DrawLoseScreen
 // TODO: DrawWinScreen

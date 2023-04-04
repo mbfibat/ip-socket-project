@@ -34,10 +34,12 @@ int main() {
             screen.inTimer = false;
             screen.timer.restart();
             p.send_answer("NOP");
-            p.receive_answer_result();
+            int RETURN_CODE = p.receive_answer_result();
 
-            // screen.drawGameLoserScreen();
-            screen.drawWaitingForHostScreen();
+            if (RETURN_CODE == CODE_WIN)
+                screen.drawWinScreen();
+            else if (RETURN_CODE == CODE_LOSE)
+                screen.drawGameOverScreen();
         }
 
         window.clear();

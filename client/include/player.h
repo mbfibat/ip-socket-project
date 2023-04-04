@@ -21,8 +21,8 @@ public:
 
     void skip_question();
     void send_answer(std::string answer);
-    std::string receive_answer_result();
-    bool register_account(std::string name);
+    int receive_answer_result();
+    int register_account(std::string name);
 
     void test();
 };
