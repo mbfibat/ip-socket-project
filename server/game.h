@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <SFML/Network.hpp>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -11,15 +12,15 @@
 #include "debug.h"
 #include "player.h"
 #include "question.h"
+#include "random.h"
 
 #define send_result(client, result, msg)            \
     {                                               \
         sf::Packet p;                               \
         p << result << msg;                         \
         if ((client).send(p) != sf::Socket::Done) { \
-            LOG("ERROR", "Error sending packet");   \
+            LOG_ERROR("Error sending result");      \
         }                                           \
-        LOG("MSG", msg);                            \
     }
 
 class Game {
@@ -29,19 +30,30 @@ class Game {
 
     std::vector<Player> players;
     std::vector<Question> questions;
+    std::vector<int> selectedQuestion;
 
-    int currentPlayer = 0;
+    int totalQuestion;
+    int currentPlayer;
+    int currentQuestion;
     bool running;
 
 public:
     Game();
+    ~Game();
 
+    // service
     bool isValidName(std::string name);
+    bool registerPlayer(sf::TcpSocket &client, std::string name);
     bool disconnectPlayer(sf::TcpSocket *client);
-    bool registerPlayer(sf::TcpSocket &client, sf::Packet &receive_packet);
     void gameStart();
-    bool registerPlayer(sf::TcpSocket &client, Player &player);
-    void test();
+    void sendQuestion();
+
+    // handler
+    void handleNewConnection();
+    void handleRegister(sf::TcpSocket &client, sf::Packet &packet);
+    void handleAnswer(sf::TcpSocket &client, sf::Packet &packet);
+    void handleSkip(sf::TcpSocket &client, sf::Packet &packet);
+    void handleExit(sf::TcpSocket &client, sf::Packet &packet);
 
     void run();
 };

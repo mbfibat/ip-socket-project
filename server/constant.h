@@ -5,8 +5,9 @@
 
 #define IP "127.0.0.1"
 #define PORT 5000
-#define QUESTIONS_FILE "../data/question.csv"
+#define DATA_FOLDER "data/"
 #define TOTAL_PLAYER 3
+#define QUESTION_PER_PLAYER 5
 
 #define ACTION_REGISTER "register"
 #define ACTION_ANSWER "answer"
