@@ -11,7 +11,7 @@ int player_id;
 int num_questions;
 
 int main() {
-    sf::RenderWindow window{{WIDTH, HEIGHT}, "TGUI example - SFML_GRAPHICS backend"};
+    sf::RenderWindow window{{WIDTH, HEIGHT}, "Who wants to be a millionaire? phien ban amogus"};
     // Get the desktop resolution and position the window in the center of it
     const auto desktop = sf::VideoMode::getDesktopMode();
     window.setPosition({(int)(desktop.width - WIDTH) / 2, (int)(desktop.height - HEIGHT) / 2});
