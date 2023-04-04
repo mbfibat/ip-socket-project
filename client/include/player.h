@@ -2,31 +2,31 @@
 #define _PLAYER_H_
 
 #include "constant.h"
-#include "main.h"
+#include "logger.h"
 #include "question.h"
 
-#define LOG(tag, x) std::cerr << tag << '\t' << x << '\n'
+typedef struct {
+    int code;
+    std::string message;
+} Response;
 
 class Player {
 public:
-    sf::TcpSocket socket;
-
     Player();
 
-    bool can_skip;  // can skip the question only once
-
-    bool connect();
+    Response register_account(std::string name);
     void receive_game_info();
     Question receive_question();
+    Response send_answer(std::string answer);
+    Response skip_question();
 
-    void skip_question();
-    void send_answer(std::string answer);
-    int receive_answer_result();
-    int register_account(std::string name);
-
-    void test();
+    sf::TcpSocket socket;
+    bool can_skip;  // can skip the question only once
 };
 
-extern Player p;
+extern Player player;
+extern int num_players;
+extern int player_id;
+extern int num_questions;
 
 #endif

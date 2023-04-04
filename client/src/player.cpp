@@ -1,15 +1,12 @@
 #include "../include/player.h"
 
-Player::Player() {}
-
-// Connect to server, if server is not open return false
-bool Player::connect() {
+// Connect to server, if server is not open exit the program
+Player::Player() {
     if (socket.connect(IP, PORT) != sf::Socket::Done) {
         LOG("CONNECT", "Error connecting to server");
-        return false;
+        exit(0);
     }
     LOG("CONNECT", "Connected to server");
-    return true;
 }
 
 // Register a nickname for the player and send it to the server
@@ -17,107 +14,93 @@ bool Player::connect() {
 // Return false if the nickname is invalid or taken
 // The name is valid if regex ^[a-zA-Z0-9_]{1,10}$ matches
 // The name is taken if the server returns a boolean false
-int Player::register_account(std::string name) {
+Response Player::register_account(std::string name) {
     sf::Packet send_packet;
     std::string action = ACTION_REGISTER;
     send_packet << action << name;
 
     if (socket.send(send_packet) != sf::Socket::Done) {
-        LOG("REGISTER", "Error sending packet");
-        return CODE_ERROR;
+        LOG_ERROR("Error sending registration request");
+        return Response{CODE_ERROR, "Error sending registration request"};
     }
 
     sf::Packet recv_packet;
     if (socket.receive(recv_packet) != sf::Socket::Done) {
-        LOG("REGISTER", "Error receiving packet");
-        return CODE_ERROR;
+        LOG_ERROR("Error receiving registration result");
+        return Response{CODE_ERROR, "Error receiving registration result"};
     }
 
-    int RETURN_CODE;
+    int code;
     std::string msg;
-    recv_packet >> RETURN_CODE >> msg;
-    LOG("REGISTER", msg);
-    return RETURN_CODE;
+    recv_packet >> code >> msg;
+    LOG_INFO("Return code: " << code << ", message: " << msg);
+    return Response{code, msg};
 }
 
 // Receive game info from server
 void Player::receive_game_info() {
     sf::Packet recv_packet;
     if (socket.receive(recv_packet) != sf::Socket::Done) {
-        LOG("GAME_INFO", "Error receiving packet");
+        LOG_ERROR("Error receiving game info");
         return;
     }
 
-    int total_player, player_id, total_question;
-    recv_packet >> total_player >> player_id >> total_question;
-    LOG("GAME_INFO", "Total player: " << total_player);
-    LOG("GAME_INFO", "Player id: " << player_id);
-    LOG("GAME_INFO", "Total question: " << total_question);
+    recv_packet >> num_players >> player_id >> num_questions;
+    LOG_INFO("Number of players: " << num_players);
+    LOG_INFO("Player ID: " << player_id);
+    LOG_INFO("Number of questions: " << num_questions);
 }
 
 // receive the question from server
 Question Player::receive_question() {
     sf::Packet recv_packet;
     if (socket.receive(recv_packet) != sf::Socket::Done) {
-        std::cout << "Error receiving packet" << std::endl;
+        LOG_ERROR("Error receiving question");
         return Question();
     }
-    Question q;
-    recv_packet >> q;
-    return q;
+
+    Question question;
+    recv_packet >> question;
+    return question;
+}
+
+// Send the answer to server and receive answer result from server
+// Could be "Correct" or "Wrong" or "Win"
+Response Player::send_answer(std::string answer) {
+    sf::Packet send_packet;
+    std::string action = ACTION_ANSWER;
+    send_packet << action << answer;
+    if (socket.send(send_packet) != sf::Socket::Done) {
+        LOG_ERROR("Error sending answer");
+        return Response{CODE_ERROR, "Error sending answer"};
+    }
+
+    sf::Packet recv_packet;
+    if (socket.receive(recv_packet) != sf::Socket::Done) {
+        LOG_ERROR("Error receiving answer result");
+        return Response{CODE_ERROR, "Error receiving answer result"};
+    }
+
+    int code;
+    std::string msg;
+    recv_packet >> code >> msg;
+    LOG_INFO("Return code: " << code << ", message: " << msg);
+    return Response{code, msg};
 }
 
 // skip the question
-void Player::skip_question() {
-    if (!can_skip)
-        return;
+Response Player::skip_question() {
+    if (!can_skip) return Response{CODE_ERROR, "You can only skip once"};
 
     sf::Packet send_packet;
     std::string action = ACTION_SKIP;
     send_packet << action;
     if (socket.send(send_packet) != sf::Socket::Done) {
-        std::cout << "Error sending packet" << std::endl;
-        return;
+        LOG_ERROR("Error sending skip request");
+        return Response{CODE_ERROR, "Error sending skip request"};
     }
 
     can_skip = false;
-}
-
-// send the answer to server
-void Player::send_answer(std::string answer) {
-    sf::Packet send_packet;
-    std::string action = ACTION_ANSWER;
-    send_packet << action << answer;
-    if (socket.send(send_packet) != sf::Socket::Done) {
-        std::cout << "Error sending packet" << std::endl;
-        return;
-    }
-}
-
-// receive answer result from server
-// Could be "Correct" or "Wrong" or "Win"
-int Player::receive_answer_result() {
-    sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done) {
-        std::cout << "Error receiving packet" << std::endl;
-        return CODE_ERROR;
-    }
-
-    int RETURN_CODE;
-    recv_packet >> RETURN_CODE;
-    std::cout << RETURN_CODE << std::endl;
-    return RETURN_CODE;
-}
-
-// Test kakaka
-void Player::test() {
-    sf::Packet recv_packet;
-    if (socket.receive(recv_packet) != sf::Socket::Done) {
-        std::cout << "Error receiving packet" << std::endl;
-        return;
-    }
-
-    Question q;
-    recv_packet >> q;
-    std::cout << q;
+    LOG_INFO("Skip success");
+    return Response{CODE_SUCCESS, "Skip success"};
 }

@@ -1,14 +1,19 @@
 #ifndef CONSTANT_H
 #define CONSTANT_H
 
-#include <string>
+// Configurations
 
-const static int WIDTH = 1440;
-const static int HEIGHT = 900;
-const static int PORT = 5000;
-const static std::string IP = "127.0.0.1";
+#define IP "127.0.0.1"
+#define PORT 5000
+#define WIDTH 900
+#define HEIGHT 600
+#define BACKGROUND_IMG_PATH "assets/image/background.png"
+#define FONT_PATH "assets/fonts/Montserrat-Regular.ttf"
 
 #define DELAY_MS 100
+#define TIMER_SEC 30
+
+// Constants
 
 #define ACTION_REGISTER "register"
 #define ACTION_ANSWER "answer"

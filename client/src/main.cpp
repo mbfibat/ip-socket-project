@@ -1,14 +1,16 @@
-#include "../include/main.h"
-
 #include <iostream>
 #include <string>
 
-Player p;
+#include "../include/constant.h"
+#include "../include/player.h"
+#include "../include/screen.h"
+
+Player player;
+int num_players;
+int player_id;
+int num_questions;
 
 int main() {
-    if (!p.connect())
-        return 0;
-
     sf::RenderWindow window{{WIDTH, HEIGHT}, "TGUI example - SFML_GRAPHICS backend"};
     // Get the desktop resolution and position the window in the center of it
     const auto desktop = sf::VideoMode::getDesktopMode();
@@ -28,17 +30,16 @@ int main() {
                 window.close();
         }
 
-        if (screen.inTimer)
-            std::cout << screen.timer.getElapsedTime().asSeconds() << " s" << std::endl;
-        if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= 10) {
+        // if (screen.inTimer)
+        //     std::cout << screen.timer.getElapsedTime().asSeconds() << " s" << std::endl;
+        if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= TIMER_SEC) {
             screen.inTimer = false;
             screen.timer.restart();
-            p.send_answer("NOP");
-            int RETURN_CODE = p.receive_answer_result();
 
-            if (RETURN_CODE == CODE_WIN)
+            auto [code, msg] = player.send_answer("NOP");
+            if (code == CODE_WIN)
                 screen.drawWinScreen();
-            else if (RETURN_CODE == CODE_LOSE)
+            else if (code == CODE_LOSE)
                 screen.drawGameOverScreen();
         }
 

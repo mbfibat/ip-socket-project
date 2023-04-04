@@ -1,11 +1,16 @@
-#ifndef screen_h
-#define screen_h
+#ifndef SCREEN_H
+#define SCREEN_H
+
+#include <unistd.h>
+
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <functional>
+#include <iostream>
 
+#include "logger.h"
 #include "player.h"
 #include "question.h"
-using namespace std;
 
 class Screen {
 private:
@@ -16,7 +21,7 @@ public:
     sf::Clock timer;
     bool inTimer = false;
 
-    string name;  // player name
+    std::string name;  // player name
     Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
     void setBackground();
     void drawWelcomeScreen();
@@ -29,4 +34,4 @@ public:
 
 void register_account(tgui::String name);
 
-#endif
+#endif  // SCREEN_H
