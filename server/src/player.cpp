@@ -1,4 +1,4 @@
-#include "player.h"
+#include "../include/player.h"
 
 Player::Player(std::string name, sf::TcpSocket *client) {
     this->name = name;

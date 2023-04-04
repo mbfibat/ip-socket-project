@@ -1,4 +1,4 @@
-#include "game.h"
+#include "../include/game.h"
 
 bool Game::isValidName(std::string name) {
     // check if name exist

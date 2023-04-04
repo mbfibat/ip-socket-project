@@ -1,8 +1,6 @@
 #ifndef CONSTANT_H
 #define CONSTANT_H
 
-#include <string>
-
 #define IP "127.0.0.1"
 #define PORT 5000
 #define DATA_FOLDER "data/"

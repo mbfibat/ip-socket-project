@@ -16,7 +16,7 @@ public:
     sf::Clock timer;
     bool inTimer = false;
 
-    string name;  // player inputted name
+    string name;  // player name
     Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
     void setBackground();
     void drawWelcomeScreen();

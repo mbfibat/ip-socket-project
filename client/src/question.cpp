@@ -1,4 +1,4 @@
-#include "question.h"
+#include "../include/question.h"
 
 std::ostream& operator<<(std::ostream& out, const Question& q) {
     out << q.title << std::endl;

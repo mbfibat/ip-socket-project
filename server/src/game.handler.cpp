@@ -1,4 +1,4 @@
-#include "game.h"
+#include "../include/game.h"
 
 void Game::handleNewConnection() {
     sf::TcpSocket *client = new sf::TcpSocket;

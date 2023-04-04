@@ -1,4 +1,4 @@
-#include "question.h"
+#include "../include/question.h"
 
 Question::Question(std::string line) {
     std::stringstream ss(line);

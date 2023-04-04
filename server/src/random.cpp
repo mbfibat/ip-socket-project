@@ -1,4 +1,4 @@
-#include "random.h"
+#include "../include/random.h"
 
 std::vector<int> pick(int N, int k) {
     std::random_device rd;

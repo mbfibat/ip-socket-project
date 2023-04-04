@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "constant.h"
-#include "debug.h"
+#include "logger.h"
 #include "player.h"
 #include "question.h"
 #include "random.h"
@@ -41,7 +41,6 @@ public:
     Game();
     ~Game();
 
-    // service
     bool isValidName(std::string name);
     bool registerPlayer(sf::TcpSocket &client, std::string name);
     bool disconnectPlayer(sf::TcpSocket *client);
@@ -50,7 +49,6 @@ public:
     int countAlivePlayer();
     bool checkCorrectTurn(sf::TcpSocket &client);
 
-    // handler
     void handleNewConnection();
     void handleRegister(sf::TcpSocket &client, sf::Packet &packet);
     void handleAnswer(sf::TcpSocket &client, sf::Packet &packet);
