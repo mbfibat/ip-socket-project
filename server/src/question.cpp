@@ -1,20 +1,34 @@
 #include "../include/question.h"
 
-Question::Question(std::string line) {
+std::istream& operator>>(std::istream& is, Question& q) {
+    std::string line, token;
+    std::getline(is, line);
     std::stringstream ss(line);
-    std::string token;
-    std::getline(ss, token, ',');
-    title = token;
-    std::getline(ss, token, ',');
-    choice_A = token;
-    std::getline(ss, token, ',');
-    choice_B = token;
-    std::getline(ss, token, ',');
-    choice_C = token;
-    std::getline(ss, token, ',');
-    choice_D = token;
-    std::getline(ss, token, ',');
-    correct = token[0];
+
+    int len = 0;
+    std::vector<std::string> tokens;
+    for (int i = 0; i < 6; i++) {
+        std::getline(ss, token, ',');
+        if (token.size() < 3) {
+            break;
+        }
+        token = token.substr(1, token.size() - 2);
+        tokens.push_back(token);
+
+        len += token.size();
+    }
+
+    // checksum
+    if (len + 17 == line.size()) {
+        q.title = tokens[0];
+        q.choice_A = tokens[1];
+        q.choice_B = tokens[2];
+        q.choice_C = tokens[3];
+        q.choice_D = tokens[4];
+        q.correct = tokens[5][0];
+    }
+
+    return is;
 }
 
 sf::Packet& operator<<(sf::Packet& packet, const Question& q) {

@@ -12,13 +12,16 @@ Game::Game() {
     // Load question
     std::string path = DATA_FOLDER;
     for (const auto &entry : std::filesystem::directory_iterator(path)) {
-        std::string file_name = entry.path().string();
-        std::ifstream file(file_name);
-        std::string line;
-        while (std::getline(file, line)) {
-            questions.push_back(Question(line));
+        std::string filename = entry.path().string();
+        std::ifstream file(filename);
+        Question question;
+        while (file >> question) {
+            if (question.title.size() > 0) {
+                questions.push_back(question);
+            }
         }
     }
+    LOG_INFO("Loaded " << questions.size() << " questions");
 }
 
 Game::~Game() {

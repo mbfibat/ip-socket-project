@@ -7,13 +7,11 @@
 #include <string>
 
 struct Question {
-    Question() {}
-    Question(std::string line);
-
     std::string title;
     std::string choice_A, choice_B, choice_C, choice_D;
     char correct;
 
+    friend std::istream& operator>>(std::istream& is, Question& q);
     friend sf::Packet& operator<<(sf::Packet& packet, const Question& q);
 };
 
