@@ -90,7 +90,7 @@ Response Player::receive_answer_response() {
 // skip the question
 void Player::send_skip_request() {
     if (!can_skip) {
-        LOG_ERROR("Cannot skip");
+        LOG_INFO("Cannot skip");
         return;
     }
 
@@ -103,5 +103,5 @@ void Player::send_skip_request() {
     }
 
     can_skip = false;
-    wait_event = RCV_ANSWER_RESULT;
+    wait_event = RCV_SKIP_RESULT;
 }

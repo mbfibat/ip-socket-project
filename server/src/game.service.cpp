@@ -21,6 +21,8 @@ bool Game::checkCorrectTurn(sf::TcpSocket &client) {
 }
 
 bool Game::disconnectPlayer(sf::TcpSocket *client) {
+    // FIXME: handle disconnect correctly
+
     LOG_INFO("Client " << client->getRemoteAddress() << " disconnected");
     for (int i = 0; i < players.size(); i++) {
         if (players[i].client == client) {

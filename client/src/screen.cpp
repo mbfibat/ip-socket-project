@@ -195,8 +195,8 @@ void Screen::drawGameScreen(Question question) {
 
     skip->onPress([=] {
         this->inTimer = false;
-        player.can_skip = false;
         player.send_skip_request();
+        screen.drawWaitingForHostScreen();
     });
 
     LOG_INFO("End Turn");

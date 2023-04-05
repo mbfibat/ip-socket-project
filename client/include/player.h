@@ -12,7 +12,13 @@ typedef struct {
 } Response;
 
 class Player {
+private:
+    sf::TcpSocket socket;
+    sf::SocketSelector selector;
+
 public:
+    bool can_skip;  // can skip the question only once
+
     Player();
 
     void handle_socket();
@@ -25,10 +31,6 @@ public:
     void receive_game_info();
     Question receive_question();
     Response receive_answer_response();
-
-    sf::TcpSocket socket;
-    sf::SocketSelector selector;
-    bool can_skip;  // can skip the question only once
 };
 
 extern Player player;

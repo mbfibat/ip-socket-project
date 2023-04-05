@@ -3,12 +3,14 @@
 // Connect to server, if server is not open exit the program
 Player::Player() {
     if (socket.connect(IP, PORT) != sf::Socket::Done) {
-        LOG("CONNECT", "Error connecting to server");
+        LOG_ERROR("Error connecting to server");
         exit(0);
     }
     socket.setBlocking(false);
     selector.add(socket);
     LOG_INFO("Connected to server");
+
+    can_skip = true;
 }
 
 void Player::handle_socket() {
