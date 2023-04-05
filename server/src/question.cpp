@@ -25,12 +25,12 @@ std::istream& operator>>(std::istream& is, Question& q) {
         q.choice_B = tokens[2];
         q.choice_C = tokens[3];
         q.choice_D = tokens[4];
-        q.correct = tokens[5][0];
+        q.answer = tokens[5];
     }
 
     return is;
 }
 
 sf::Packet& operator<<(sf::Packet& packet, const Question& q) {
-    return packet << q.title << q.choice_A << q.choice_B << q.choice_C << q.choice_D;
+    return packet << q.id << q.title << q.choice_A << q.choice_B << q.choice_C << q.choice_D;
 }

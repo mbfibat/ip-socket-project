@@ -11,6 +11,7 @@
 #include "logger.h"
 #include "player.h"
 #include "question.h"
+#include "socket.h"
 
 class Screen {
 private:

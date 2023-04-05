@@ -1,8 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SFML/Network.hpp>
 #include <string>
+
+#include "socket.h"
 
 struct Player {
     sf::TcpSocket *client;

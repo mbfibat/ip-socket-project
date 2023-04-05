@@ -24,13 +24,6 @@ Game::Game() {
     LOG_INFO("Loaded " << questions.size() << " questions");
 }
 
-Game::~Game() {
-    listener.close();
-    for (auto &client : clients) {
-        delete client;
-    }
-}
-
 void Game::init() {
     running = true;
     currentPlayer = 0;
@@ -51,33 +44,38 @@ void Game::run() {
             } else {
                 for (auto &client : clients) {
                     if (client != NULL && selector.isReady(*client)) {
-                        // Receive packet
-                        sf::Packet receive_packet;
-                        sf::Socket::Status status = client->receive(receive_packet);
+                        sf::Packet packet;
+                        sf::Socket::Status status;
 
+                        // Receive packet
+                        status = client->receive(packet);
                         // Disconnect
                         if (status == sf::Socket::Disconnected) {
                             disconnectPlayer(client);
                             continue;
                         }
-
                         // Error
                         if (status != sf::Socket::Done) {
                             LOG_ERROR("Error receiving packet");
                             continue;
                         }
 
-                        // Read action
-                        std::string action;
-                        receive_packet >> action;
-                        if (action == ACTION_REGISTER) {
-                            handleRegister(*client, receive_packet);
-                        } else if (action == ACTION_ANSWER) {
-                            handleAnswer(*client, receive_packet);
-                        } else if (action == ACTION_SKIP) {
-                            handleSkip(*client, receive_packet);
-                        } else {
-                            LOG_ERROR("Invalid action");
+                        int action;
+                        packet >> action;
+                        // Handle action
+                        switch (action) {
+                            case ACTION_REGISTER:
+                                handleRegister(*client, packet);
+                                break;
+                            case ACTION_ANSWER:
+                                handleAnswer(*client, packet);
+                                break;
+                            case ACTION_SKIP:
+                                handleSkip(*client, packet);
+                                break;
+                            default:
+                                LOG_ERROR("Invalid action");
+                                break;
                         }
                     }
                 }

@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SFML/Network.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -13,15 +12,12 @@
 #include "player.h"
 #include "question.h"
 #include "random.h"
+#include "socket.h"
 
-#define send_result(client, code, msg)              \
-    {                                               \
-        sf::Packet p;                               \
-        p << code << msg;                           \
-        if ((client).send(p) != sf::Socket::Done) { \
-            LOG_ERROR("Error sending result");      \
-        }                                           \
-    }
+typedef struct {
+    int code;
+    std::string msg;
+} Response;
 
 class Game {
     sf::TcpListener listener;
@@ -39,17 +35,15 @@ class Game {
 
 public:
     Game();
-    ~Game();
     void init();
     void run();
 
     bool isValidName(std::string name);
-    bool registerPlayer(sf::TcpSocket &client, std::string name);
+    int countAlivePlayer();
+    Response registerPlayer(std::string name, sf::TcpSocket &client);
     bool disconnectPlayer(sf::TcpSocket *client);
     void gameStart();
     void sendQuestion();
-    int countAlivePlayer();
-    bool checkCorrectTurn(sf::TcpSocket &client);
 
     void handleNewConnection();
     void handleRegister(sf::TcpSocket &client, sf::Packet &packet);

@@ -10,7 +10,7 @@ Player player;
 int num_players;
 int player_id;
 int num_questions;
-int wait_event;
+int wait_action = ACTION_NONE;
 
 int main() {
     sf::RenderWindow window{{WIDTH, HEIGHT}, "Who wants to be a millionaire? (Amogus Extended)"};

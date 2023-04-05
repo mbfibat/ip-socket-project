@@ -16,10 +16,6 @@ int Game::countAlivePlayer() {
     return count;
 }
 
-bool Game::checkCorrectTurn(sf::TcpSocket &client) {
-    return players[currentPlayer].client == &client;
-}
-
 bool Game::disconnectPlayer(sf::TcpSocket *client) {
     // FIXME: handle disconnect correctly
 
@@ -37,41 +33,37 @@ bool Game::disconnectPlayer(sf::TcpSocket *client) {
     return false;
 }
 
-bool Game::registerPlayer(sf::TcpSocket &client, std::string name) {
+Response Game::registerPlayer(std::string name, sf::TcpSocket &client) {
     if (!isValidName(name)) {
         LOG_INFO("Invalid name: " << name);
-        send_result(client, CODE_ERROR, "Invalid name");
-        return false;
+        return Response{CODE_ERROR, "Invalid name"};
     }
 
     // Add player
     players.push_back(Player(name, &client));
 
     LOG_INFO("Player " << name << " registered");
-    send_result(client, CODE_SUCCESS, "Register successfully");
-    return true;
+    return Response{CODE_SUCCESS, "Registered"};
 }
 
 void Game::gameStart() {
     LOG_INFO("Game start");
 
-    // Send game info
-    for (int i = 0; i < TOTAL_PLAYER; ++i) {
-        sf::Packet p;
-        p << (int)TOTAL_PLAYER << (int)(i + 1) << (int)questions.size();
-        if (players[i].client->send(p) != sf::Socket::Done) {
-            LOG_ERROR("Error sending game info to player " << players[i].name);
-            continue;
-        }
-    }
+    // Init game
+    currentPlayer = 0;
+    currentQuestion = 0;
 
     // Prepare question
     totalQuestion = players.size() * QUESTION_PER_PLAYER;
     selectedQuestion = pick(questions.size(), totalQuestion);
+    for (int i = 0; i < totalQuestion; ++i) {
+        questions[selectedQuestion[i]].id = i + 1;
+    }
 
-    // Init game
-    currentPlayer = 0;
-    currentQuestion = 0;
+    // Send game info
+    for (int i = 0; i < TOTAL_PLAYER; ++i) {
+        send(*players[i].client, ACTION_GAME_INFO, (int)players.size() << i + 1 << totalQuestion);
+    }
 }
 
 void Game::sendQuestion() {
@@ -82,15 +74,12 @@ void Game::sendQuestion() {
     }
 
     // Find alive player
+    // FIXME: handle disconnect correctly
     while (!players[currentPlayer].alive) {
         currentPlayer = (currentPlayer + 1) % players.size();
     }
 
     // Send question
-    sf::Packet p;
-    p << questions[selectedQuestion[currentQuestion]];
-    if (players[currentPlayer].client->send(p) != sf::Socket::Done) {
-        LOG_ERROR("Error sending question" << currentQuestion << " to player " << players[currentPlayer].name);
-    }
+    send(*players[currentPlayer].client, ACTION_QUESTION, questions[selectedQuestion[currentQuestion]]);
     LOG_INFO("Send question " << currentQuestion << " to player " << players[currentPlayer].name);
 }
