@@ -14,15 +14,16 @@
 
 class Screen {
 private:
-    tgui::Gui &gui;
-    sf::RenderWindow &window;
+    tgui::Gui *gui;
+    sf::RenderWindow *window;
 
 public:
     sf::Clock timer;
     bool inTimer = false;
 
-    std::string name;  // player name
-    Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
+    // Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
+    void bind(tgui::Gui *gui, sf::RenderWindow *window);
+
     void setBackground();
     void drawWelcomeScreen();
     void drawNamingScreen();
@@ -32,6 +33,6 @@ public:
     void drawGameOverScreen();
 };
 
-void register_account(tgui::String name);
+extern Screen screen;
 
 #endif  // SCREEN_H

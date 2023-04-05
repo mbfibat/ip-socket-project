@@ -22,6 +22,12 @@
 #define ACTION_SKIP "skip"
 #define ACTION_EXIT "exit"
 
+#define RCV_GAME_INFO 100
+#define RCV_QUESTION 101
+#define RCV_REGISTER_RESULT 102
+#define RCV_ANSWER_RESULT 103
+#define RCV_SKIP_RESULT 104
+
 #define CODE_ERROR -1
 #define CODE_SUCCESS 0
 #define CODE_WIN 1

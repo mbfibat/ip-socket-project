@@ -5,20 +5,22 @@
 #include "../include/player.h"
 #include "../include/screen.h"
 
+Screen screen;
 Player player;
 int num_players;
 int player_id;
 int num_questions;
+int wait_event;
 
 int main() {
-    sf::RenderWindow window{{WIDTH, HEIGHT}, "Who wants to be a millionaire? phien ban amogus"};
+    sf::RenderWindow window{{WIDTH, HEIGHT}, "Who wants to be a millionaire? (Amogus Extended)"};
     // Get the desktop resolution and position the window in the center of it
     const auto desktop = sf::VideoMode::getDesktopMode();
     window.setPosition({(int)(desktop.width - WIDTH) / 2, (int)(desktop.height - HEIGHT) / 2});
 
     tgui::Gui gui{window};
 
-    Screen screen(gui, window);
+    screen.bind(&gui, &window);
     screen.drawWelcomeScreen();
 
     while (window.isOpen()) {
@@ -30,17 +32,13 @@ int main() {
                 window.close();
         }
 
-        // if (screen.inTimer)
-        //     std::cout << screen.timer.getElapsedTime().asSeconds() << " s" << std::endl;
+        player.handle_socket();
+
         if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= TIMER_SEC) {
             screen.inTimer = false;
             screen.timer.restart();
 
-            auto [code, msg] = player.send_answer("NOP");
-            if (code == CODE_WIN)
-                screen.drawWinScreen();
-            else if (code == CODE_LOSE)
-                screen.drawGameOverScreen();
+            screen.drawGameOverScreen();
         }
 
         window.clear();

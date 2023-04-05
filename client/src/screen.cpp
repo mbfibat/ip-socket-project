@@ -1,5 +1,10 @@
 #include "../include/screen.h"
 
+void Screen::bind(tgui::Gui *gui, sf::RenderWindow *window) {
+    this->gui = gui;
+    this->window = window;
+}
+
 void Screen::setBackground() {
     // set background
     std::string imagePath = BACKGROUND_IMG_PATH;
@@ -11,21 +16,20 @@ void Screen::setBackground() {
     std::shared_ptr<tgui::Picture> background = tgui::Picture::create(texture);
     background->setSize("100%", "100%");
     background->setPosition(0, 0);
-    this->gui.add(background);
+    gui->add(background);
 
     std::string fontPath = FONT_PATH;
 
     // set font for all widgets in gui to Montserrat Regular font (default is Arial)
     // use shared pointer incase the font is destroyed before the gui
     std::shared_ptr<tgui::Font> font = std::make_shared<tgui::Font>(fontPath);
-    this->gui.setFont(*font);
+    gui->setFont(*font);
 }
 
 void Screen::drawWelcomeScreen() {
-    this->gui.removeAllWidgets();
-
-    this->setBackground();
     LOG_INFO("Welcome Screen");
+    gui->removeAllWidgets();
+    setBackground();
 
     // set title "There is a millionare among us" in the middle of the screen
     std::shared_ptr<tgui::Label> title = tgui::Label::create("There is a millionaire among us");
@@ -33,9 +37,9 @@ void Screen::drawWelcomeScreen() {
     // title->setTextSize(tgui::Gui::getAbsoluteValue(0.05f * tgui::bindHeight(title)));
     title->setTextSize(50);
     title->setSize("66%", "27%");
-    title->getRenderer()
-        ->setTextColor(sf::Color::White);
-    this->gui.add(title);
+    title->getRenderer()->setTextColor(sf::Color::White);
+
+    gui->add(title);
 
     std::shared_ptr<tgui::Button> startBtn = tgui::Button::create("Start");
     startBtn->setPosition("16%", "60%");
@@ -47,28 +51,25 @@ void Screen::drawWelcomeScreen() {
     startBtn->getSharedRenderer()->setTextColor(sf::Color::White);
     startBtn->getSharedRenderer()->setRoundedBorderRadius(10);
     startBtn->getSharedRenderer()->setBorders(2);
-
     startBtn->setTextSize(0);
 
     std::shared_ptr<tgui::Button> exitBtn = tgui::Button::create("Exit");
     exitBtn->setPosition("61%", "60%");
     exitBtn->setSize("22%", "14%");
-
     exitBtn->setTextSize(0);
 
-    this->gui.add(startBtn);
-    this->gui.add(exitBtn);
+    gui->add(startBtn);
+    gui->add(exitBtn);
 
     startBtn->onPress([=] { this->drawNamingScreen(); });
-
-    exitBtn->onPress([=] { this->window.close(); });
+    exitBtn->onPress([=] { window->close(); });
 
     LOG_INFO("Welcome Screen Done");
 }
 
 void Screen::drawNamingScreen() {
     LOG_INFO("Naming Screen");
-    this->gui.removeAllWidgets();
+    gui->removeAllWidgets();
     this->setBackground();
 
     std::shared_ptr<tgui::EditBox> nameBox = tgui::EditBox::create();
@@ -84,51 +85,43 @@ void Screen::drawNamingScreen() {
     nameBox->setTextSize(70);
     nameBox->setDefaultText("");  // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
 
-    this->gui.add(nameBox);
-    this->gui.add(submitBtn);
+    gui->add(nameBox);
+    gui->add(submitBtn);
 
     // nameBox->onReturnKeyPress(&register_account);
     submitBtn->onPress([=] {
         std::string name = nameBox->getText().toStdString();
         LOG_INFO("Name: " + name);
 
-        auto [code, msg] = player.register_account(name);
-        if (code != CODE_SUCCESS)
-            this->drawNamingScreen();
-        else {
-            this->drawWaitingForHostScreen();
-        } });
+        player.send_register_request(name);
+        this->drawWaitingForHostScreen();
+    });
 
     LOG_INFO("Naming Screen Done");
 }
 
 void Screen::drawWaitingForHostScreen() {
     LOG_INFO("Waiting For Host Start");
-    this->gui.removeAllWidgets();
+    gui->removeAllWidgets();
     this->setBackground();
 
     std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
     textBox->addLine("WAITING FOR HOST");
-    this->gui.add(textBox);
+    gui->add(textBox);
 
     textBox->setSize("66%", "27%");
     textBox->setPosition("17%", "36%");
     textBox->setTextSize(50);
     textBox->setLinesStartFromTop(true);
 
-    this->window.clear();
-    this->gui.draw();
-    this->window.display();
-
-    player.receive_game_info();
-    Question question = player.receive_question();
-    LOG_INFO("Receive question: " << question);
-    this->drawGameScreen(question);
+    window->clear();
+    gui->draw();
+    window->display();
 }
 
 void Screen::drawGameScreen(Question question) {
     LOG_INFO("Game Screen");
-    this->gui.removeAllWidgets();
+    gui->removeAllWidgets();
     this->setBackground();
 
     std::shared_ptr<tgui::Button> buttonA = tgui::Button::create(question.choice_A);
@@ -168,100 +161,50 @@ void Screen::drawGameScreen(Question question) {
 
     questionBox->setLinesStartFromTop(true);
 
-    this->gui.add(buttonA);
-    this->gui.add(buttonB);
-    this->gui.add(buttonC);
-    this->gui.add(buttonD);
-    this->gui.add(questionBox);
+    gui->add(buttonA);
+    gui->add(buttonB);
+    gui->add(buttonC);
+    gui->add(buttonD);
+    gui->add(questionBox);
 
     if (player.can_skip)
-        this->gui.add(skip);
+        gui->add(skip);
 
     this->inTimer = true;
     this->timer.restart();
 
     buttonA->onPress([=] {
         this->inTimer = false;
-        auto [code, msg] = player.send_answer("a");
-        if (code == CODE_WIN) {
-            this->drawWinScreen();
-        } else if (code == CODE_CORRECT) {
-            // this->drawWaitingForHostScreen();
-            Question question = player.receive_question();
-            LOG_INFO("Receive question: " << question);
-            this->drawGameScreen(question);
-        } else {
-            this->drawGameOverScreen();
-        }
+        player.send_answer("a");
     });
 
     buttonB->onPress([=] {
         this->inTimer = false;
-        auto [code, msg] = player.send_answer("b");
-        if (code == CODE_WIN) {
-            this->drawWinScreen();
-        } else if (code == CODE_CORRECT) {
-            // this->drawWaitingForHostScreen();
-            Question question = player.receive_question();
-            LOG_INFO("Receive question: " << question);
-            this->drawGameScreen(question);
-        } else {
-            this->drawGameOverScreen();
-        }
+        player.send_answer("b");
     });
 
     buttonC->onPress([=] {
         this->inTimer = false;
-        auto [code, msg] = player.send_answer("c");
-        if (code == CODE_WIN) {
-            this->drawWinScreen();
-        } else if (code == CODE_CORRECT) {
-            // this->drawWaitingForHostScreen();
-            Question question = player.receive_question();
-            LOG_INFO("Receive question: " << question);
-            this->drawGameScreen(question);
-        } else {
-            this->drawGameOverScreen();
-        }
+        player.send_answer("c");
     });
 
     buttonD->onPress([=] {
         this->inTimer = false;
-        auto [code, msg] = player.send_answer("d");
-        if (code == CODE_WIN) {
-            this->drawWinScreen();
-        } else if (code == CODE_CORRECT) {
-            // this->drawWaitingForHostScreen();
-            Question question = player.receive_question();
-            LOG_INFO("Receive question: " << question);
-            this->drawGameScreen(question);
-        } else {
-            this->drawGameOverScreen();
-        }
+        player.send_answer("d");
     });
 
     skip->onPress([=] {
         this->inTimer = false;
         player.can_skip = false;
-        auto [code, msg] = player.skip_question();
-        if (code == CODE_SUCCESS) {
-            // this->drawWaitingForHostScreen();
-            // TODO: thêm waiting screen khác
-            // không dùng lại waiting for host được vì nó có receive game info
-            // nếu không thì sẽ kẹt ở screen này đến khi nhận được question
-            Question question = player.receive_question();
-            LOG_INFO("Receive question: " << question);
-            this->drawGameScreen(question);
-        } else {
-            this->drawGameOverScreen();
-        } });
+        player.send_skip_request();
+    });
 
     LOG_INFO("End Turn");
 }
 
 void Screen::drawWinScreen() {
     LOG_INFO("Win Screen");
-    this->gui.removeAllWidgets();
+    gui->removeAllWidgets();
     // this->setBackground();
 
     // set background
@@ -275,20 +218,20 @@ void Screen::drawWinScreen() {
     std::shared_ptr<tgui::Picture> background = tgui::Picture::create(texture);
     background->setSize("100%", "100%");
     background->setPosition(0, 0);
-    this->gui.add(background);
+    gui->add(background);
 
     // std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
     // textBox->addLine("YOU WIN");
-    // this->gui.add(textBox);
+    // gui->add(textBox);
 
-    this->window.clear();
-    this->gui.draw();
-    this->window.display();
+    window->clear();
+    gui->draw();
+    window->display();
 }
 
 void Screen::drawGameOverScreen() {
     LOG_INFO("Game Over Screen");
-    this->gui.removeAllWidgets();
+    gui->removeAllWidgets();
     // this->setBackground();
 
     // set background
@@ -302,13 +245,13 @@ void Screen::drawGameOverScreen() {
     std::shared_ptr<tgui::Picture> background = tgui::Picture::create(texture);
     background->setSize("100%", "100%");
     background->setPosition(0, 0);
-    this->gui.add(background);
+    gui->add(background);
 
     // std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
     // textBox->addLine("GAME OVER");
-    // this->gui.add(textBox);
+    // gui->add(textBox);
 
-    this->window.clear();
-    this->gui.draw();
-    this->window.display();
+    window->clear();
+    gui->draw();
+    window->display();
 }

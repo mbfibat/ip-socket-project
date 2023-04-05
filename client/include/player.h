@@ -4,6 +4,7 @@
 #include "constant.h"
 #include "logger.h"
 #include "question.h"
+#include "screen.h"
 
 typedef struct {
     int code;
@@ -14,19 +15,28 @@ class Player {
 public:
     Player();
 
-    Response register_account(std::string name);
+    void handle_socket();
+
+    void send_register_request(std::string name);
+    void send_answer(std::string answer);
+    void send_skip_request();
+
+    Response receive_register_response();
     void receive_game_info();
     Question receive_question();
-    Response send_answer(std::string answer);
-    Response skip_question();
+    Response receive_answer_response();
 
     sf::TcpSocket socket;
+    sf::SocketSelector selector;
     bool can_skip;  // can skip the question only once
 };
 
 extern Player player;
+
 extern int num_players;
 extern int player_id;
 extern int num_questions;
 
-#endif
+extern int wait_event;
+
+#endif  // _PLAYER_H_
