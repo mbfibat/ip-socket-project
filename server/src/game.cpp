@@ -50,7 +50,7 @@ void Game::run() {
                 handleNewConnection();
             } else {
                 for (auto &client : clients) {
-                    if (selector.isReady(*client)) {
+                    if (client != NULL && selector.isReady(*client)) {
                         // Receive packet
                         sf::Packet receive_packet;
                         sf::Socket::Status status = client->receive(receive_packet);

@@ -31,6 +31,7 @@ bool Game::disconnectPlayer(sf::TcpSocket *client) {
     }
     selector.remove(*client);
     delete client;
+    client = NULL;
     return false;
 }
 
