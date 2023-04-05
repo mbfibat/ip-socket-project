@@ -37,8 +37,7 @@ int main() {
         if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= TIMER_SEC) {
             screen.inTimer = false;
             screen.timer.restart();
-
-            screen.drawGameOverScreen();
+            player.send_answer("nop");
         }
 
         window.clear();

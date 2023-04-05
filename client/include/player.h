@@ -18,6 +18,7 @@ private:
     sf::SocketSelector selector;
 
     std::string name;
+    Question question;
 
 public:
     bool can_skip;  // can skip the question only once
@@ -27,8 +28,8 @@ public:
     void handle_socket();
 
     void send_register_request(std::string name);
-    void send_answer(std::string answer, int question_id);
-    void send_skip_request(int question_id);
+    void send_answer(std::string answer);
+    void send_skip_request();
 };
 
 extern Player player;

@@ -18,18 +18,18 @@ void Player::send_register_request(std::string name) {
 
 // Send the answer to server and receive answer result from server
 // Could be "Correct" or "Wrong" or "Win"
-void Player::send_answer(std::string answer, int question_id) {
+void Player::send_answer(std::string answer) {
     if (wait_action != ACTION_NONE) {
         LOG_ERROR("Cannot answer, waiting for action: " << wait_action);
         return;
     }
 
-    send(socket, ACTION_ANSWER, name << question_id << answer);
+    send(socket, ACTION_ANSWER, name << question.id << answer);
     wait_action = ACTION_ANSWER;
 }
 
 // skip the question
-void Player::send_skip_request(int question_id) {
+void Player::send_skip_request() {
     if (wait_action != ACTION_NONE) {
         LOG_ERROR("Cannot skip, waiting for action: " << wait_action);
         return;
@@ -40,7 +40,7 @@ void Player::send_skip_request(int question_id) {
         return;
     }
 
-    send(socket, ACTION_SKIP, name << question_id);
+    send(socket, ACTION_SKIP, name << question.id);
     can_skip = false;
     wait_action = ACTION_SKIP;
 }

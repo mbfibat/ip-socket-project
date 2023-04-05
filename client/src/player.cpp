@@ -62,6 +62,7 @@ void Player::handle_socket() {
                 recv_packet >> question;
                 LOG_INFO("Question: " << question);
 
+                this->question = question;
                 wait_action = ACTION_NONE;
                 screen.drawGameScreen(question);
                 break;

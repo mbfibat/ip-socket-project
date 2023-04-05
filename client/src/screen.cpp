@@ -175,27 +175,27 @@ void Screen::drawGameScreen(Question question) {
 
     buttonA->onPress([=] {
         this->inTimer = false;
-        player.send_answer("a", question.id);
+        player.send_answer("a");
     });
 
     buttonB->onPress([=] {
         this->inTimer = false;
-        player.send_answer("b", question.id);
+        player.send_answer("b");
     });
 
     buttonC->onPress([=] {
         this->inTimer = false;
-        player.send_answer("c", question.id);
+        player.send_answer("c");
     });
 
     buttonD->onPress([=] {
         this->inTimer = false;
-        player.send_answer("d", question.id);
+        player.send_answer("d");
     });
 
     skip->onPress([=] {
         this->inTimer = false;
-        player.send_skip_request(question.id);
+        player.send_skip_request();
         screen.drawWaitingForHostScreen();
     });
 
