@@ -281,15 +281,15 @@ void Screen::drawWinScreen() {
     textBox->addLine(s);
     gui->add(textBox);
 
-    std::shared_ptr<tgui::Button> button = tgui::Button::create("Play Again");
-    button->setSize("12%", "8%");
-    button->setPosition("90%", "90%");
-    button->setTextSize(0);
-    gui->add(button);
+    // std::shared_ptr<tgui::Button> button = tgui::Button::create("Play Again");
+    // button->setSize("12%", "8%");
+    // button->setPosition("90%", "90%");
+    // button->setTextSize(0);
+    // gui->add(button);
 
-    button->onPress([=] {
-        screen.drawNamingScreen();
-    });
+    // button->onPress([=] {
+    //     screen.drawNamingScreen();
+    // });
 
     window->clear();
     gui->draw();

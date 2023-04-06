@@ -84,6 +84,7 @@ void Player::handle_socket() {
                     wait_action = ACTION_QUESTION;
                     //  TODO: animate correct answer
                 } else if (code == CODE_WIN) {
+                    screen.playCorrectSound();
                     wait_action = ACTION_NONE;
                     LOG_INFO("You win");
                     screen.drawWinScreen();
