@@ -224,9 +224,18 @@ void Screen::drawWinScreen() {
     background->setPosition(0, 0);
     gui->add(background);
 
-    // std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
-    // textBox->addLine("YOU WIN");
-    // gui->add(textBox);
+    // set position of text box to the lower center of the screen
+    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+
+    textBox->setSize("66%", "27%");
+    textBox->setPosition("20%", "65%");
+    textBox->setTextSize(50);
+    textBox->setTextColor(sf::Color::Blue);
+    textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
+    textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+    textBox->addLine("Return to main lobby in 3 seconds");
+
+    gui->add(textBox);
 
     window->clear();
     gui->draw();
@@ -255,9 +264,16 @@ void Screen::drawGameOverScreen() {
     background->setPosition(0, 0);
     gui->add(background);
 
-    // std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
-    // textBox->addLine("GAME OVER");
-    // gui->add(textBox);
+    // set position of text box to the lower center of the screen
+    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    textBox->setSize("66%", "27%");
+    textBox->setPosition("20%", "65%");
+    textBox->setTextSize(50);
+    textBox->setTextColor(sf::Color::Red);
+    textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
+    textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+    textBox->addLine("Return to main lobby in 3 seconds");
+    gui->add(textBox);
 
     window->clear();
     gui->draw();
