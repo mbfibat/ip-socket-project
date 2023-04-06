@@ -40,6 +40,12 @@ int main() {
             player.send_answer("nop");
         }
 
+        if (screen.gameEnd && screen.timer.getElapsedTime().asSeconds() >= 3) {
+            screen.gameEnd = false;
+            screen.timer.restart();
+            screen.drawWelcomeScreen();
+        }
+
         window.clear();
 
         gui.draw();

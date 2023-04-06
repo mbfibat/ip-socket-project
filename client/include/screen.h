@@ -21,6 +21,7 @@ private:
 public:
     sf::Clock timer;
     bool inTimer = false;
+    bool gameEnd = false;
 
     // Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
     void bind(tgui::Gui *gui, sf::RenderWindow *window);

@@ -207,6 +207,10 @@ void Screen::drawWinScreen() {
     gui->removeAllWidgets();
     // this->setBackground();
 
+    // set timer to show the screen for only 3 seconds
+    gameEnd = true;
+    timer.restart();
+
     // set background
     std::string imagePath = WIN_BACKGROUND_IMG_PATH;
     sf::Texture texture;
@@ -233,6 +237,10 @@ void Screen::drawGameOverScreen() {
     LOG_INFO("Game Over Screen");
     gui->removeAllWidgets();
     // this->setBackground();
+
+    // set timer to show the screen for only 3 seconds
+    gameEnd = true;
+    timer.restart();
 
     // set background
     std::string imagePath = LOSE_BACKGROUND_IMG_PATH;
