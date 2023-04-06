@@ -74,14 +74,22 @@ void Player::handle_socket() {
                 LOG_INFO("Return code: " << code << ", message: " << msg);
 
                 if (code == CODE_CORRECT) {
+                    screen.playCorrectSound();
+                    tgui::Widget::Ptr focusedWidget = screen.gui->getFocusedLeaf();  //->setBackgroundColor(tgui::Color::Green);
+                    if (focusedWidget && focusedWidget->getWidgetType() == "Button") {
+                        auto focusedButton = focusedWidget->cast<tgui::Button>();
+                        focusedButton->getRenderer()->setBackgroundColor(tgui::Color::Green);
+                    }
+
                     wait_action = ACTION_QUESTION;
-                    // TODO: animate correct answer
+                    //  TODO: animate correct answer
                 } else if (code == CODE_WIN) {
                     wait_action = ACTION_NONE;
                     LOG_INFO("You win");
                     screen.drawWinScreen();
                 } else if (code == CODE_LOSE) {
                     wait_action = ACTION_NONE;
+                    screen.playWrongSound();
                     LOG_INFO("You lose");
                     screen.drawGameOverScreen();
                 } else if (code == CODE_ERROR) {

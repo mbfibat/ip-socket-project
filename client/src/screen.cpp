@@ -103,6 +103,15 @@ void Screen::drawNamingScreen() {
     gui->add(nameBox);
     gui->add(submitBtn);
 
+    /*
+    nameBox->getRenderer()->setBackgroundColor(sf::Color::Black);
+    nameBox->getRenderer()->setBorderColor(sf::Color::White);
+    nameBox->getRenderer()->setBorderColorHover(sf::Color::White);
+    nameBox->getRenderer()->setTextColor(sf::Color::White);
+    nameBox->getRenderer()->setBackgroundColorFocused(sf::Color::Black);
+    nameBox->getRenderer()->setBackgroundColorHover(sf::Color::Black);
+    */
+
     // nameBox->onReturnKeyPress(&register_account);
     submitBtn->onPress([=] {
         std::string name = nameBox->getText().toStdString();
@@ -131,6 +140,12 @@ void Screen::drawWaitingForHostScreen() {
     textBox->setPosition("35%", "40%");
     textBox->setTextSize(50);
     textBox->setLinesStartFromTop(true);
+
+    /*
+    textBox->getRenderer()->setBackgroundColor(sf::Color::Black);
+    textBox->getRenderer()->setBorderColor(sf::Color::White);
+    textBox->setTextColor(sf::Color::White);
+    */
 
     window->clear();
     gui->draw();
@@ -167,6 +182,7 @@ void Screen::drawGameScreen(Question question) {
     buttonB->setTextSize(0);
     buttonC->setTextSize(0);
     buttonD->setTextSize(0);
+    skip->setTextSize(0);
 
     buttonA->setPosition("8%", "56%");
     buttonB->setPosition("50%", "56%");
@@ -265,6 +281,16 @@ void Screen::drawWinScreen() {
     textBox->addLine(s);
     gui->add(textBox);
 
+    std::shared_ptr<tgui::Button> button = tgui::Button::create("Play Again");
+    button->setSize("12%", "8%");
+    button->setPosition("90%", "90%");
+    button->setTextSize(0);
+    gui->add(button);
+
+    button->onPress([=] {
+        screen.drawNamingScreen();
+    });
+
     window->clear();
     gui->draw();
     window->display();
@@ -309,4 +335,27 @@ void Screen::drawGameOverScreen() {
     window->clear();
     gui->draw();
     window->display();
+}
+
+void Screen::playCorrectSound() {
+    if (!buffer.loadFromFile(CORRECT_SOUND_PATH)) {
+        LOG_INFO("Cannot load correct sound");
+    }
+    sound.setBuffer(buffer);
+    sound.setVolume(100);
+    sound.play();
+    LOG_INFO("play correct sound");
+}
+
+void Screen::playWrongSound() {
+    if (!buffer.loadFromFile(INCORRECT_SOUND_PATH)) {
+        LOG_INFO("Cannot load wrong sound");
+    }
+    sound.setBuffer(buffer);
+    sound.setVolume(100);
+    sound.play();
+    LOG_INFO("play wrong sound");
+}
+
+void Screen::animateCorrectAns() {
 }

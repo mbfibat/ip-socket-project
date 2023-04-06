@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <functional>
@@ -15,14 +16,17 @@
 
 class Screen {
 private:
-    tgui::Gui *gui;
     sf::RenderWindow *window;
 
 public:
+    tgui::Gui *gui;
     sf::Clock timer;
     bool inTimer = false;
     bool gameWin = false;
     bool gameOver = false;
+
+    sf::Sound sound;
+    sf::SoundBuffer buffer;
 
     // Screen(tgui::Gui &gui, sf::RenderWindow &window) : gui(gui), window(window){};
     void bind(tgui::Gui *gui, sf::RenderWindow *window);
@@ -34,6 +38,9 @@ public:
     void drawGameScreen(Question q);
     void drawWinScreen();
     void drawGameOverScreen();
+    void playCorrectSound();
+    void playWrongSound();
+    void animateCorrectAns();
 };
 
 extern Screen screen;

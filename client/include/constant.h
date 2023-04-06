@@ -11,6 +11,8 @@
 #define FONT_PATH "assets/fonts/amogus.ttf"
 #define WIN_BACKGROUND_IMG_PATH "assets/image/winscreen.png"
 #define LOSE_BACKGROUND_IMG_PATH "assets/image/losescreen.png"
+#define CORRECT_SOUND_PATH "assets/sounds/correct.wav"
+#define INCORRECT_SOUND_PATH "assets/sounds/wrong.wav"
 
 #define DELAY_MS 100
 #define TIMER_SEC 30

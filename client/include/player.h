@@ -1,6 +1,8 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+#include <thread>
+
 #include "constant.h"
 #include "logger.h"
 #include "question.h"
