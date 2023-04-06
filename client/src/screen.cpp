@@ -75,15 +75,30 @@ void Screen::drawNamingScreen() {
     std::shared_ptr<tgui::EditBox> nameBox = tgui::EditBox::create();
     nameBox->setSize("66%", "19%");
     nameBox->setPosition("17%", "27%");
-    nameBox->getRenderer()->setBackgroundColor(sf::Color(255, 253, 245, 255));
+
+    nameBox->getRenderer()->setBorders(2);
+
+    nameBox->getRenderer()->setTextColor(sf::Color::White);
+    nameBox->getRenderer()->setCaretColor(sf::Color::White);
+    nameBox->getRenderer()->setBorderColor(sf::Color::White);
+    nameBox->getRenderer()->setBackgroundColor(sf::Color::Black);
+
+    nameBox->getRenderer()->setTextColorFocused(sf::Color::White);
+    nameBox->getRenderer()->setCaretColorFocused(sf::Color::White);
+    nameBox->getRenderer()->setBorderColorFocused(sf::Color::White);
+    nameBox->getRenderer()->setBackgroundColorFocused(sf::Color::Black);
+
+    nameBox->getRenderer()->setCaretColorHover(sf::Color::Black);
+    nameBox->getRenderer()->setBorderColorHover(sf::Color::Yellow);
+    nameBox->getRenderer()->setBackgroundColorHover(sf::Color{215, 193, 107, 100});
+
+    nameBox->setTextSize(70);
+    nameBox->setDefaultText("");  // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
 
     std::shared_ptr<tgui::Button> submitBtn = tgui::Button::create("Submit");
     submitBtn->setSize("22%", "14%");
     submitBtn->setPosition("39%", "59%");
     submitBtn->setTextSize(0);
-
-    nameBox->setTextSize(70);
-    nameBox->setDefaultText("");  // ko co cai nay thi no se "aaaaaaaaaa" ko hieu tai sao
 
     gui->add(nameBox);
     gui->add(submitBtn);
@@ -106,11 +121,14 @@ void Screen::drawWaitingForHostScreen() {
     this->setBackground();
 
     std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    textBox->setTextColor(sf::Color::White);
+    textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
+    textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
     textBox->addLine("WAITING FOR HOST");
     gui->add(textBox);
 
     textBox->setSize("66%", "27%");
-    textBox->setPosition("17%", "36%");
+    textBox->setPosition("35%", "40%");
     textBox->setTextSize(50);
     textBox->setLinesStartFromTop(true);
 
@@ -134,6 +152,9 @@ void Screen::drawGameScreen(Question question) {
     timerBox->setPosition("90%", "10%");
 
     std::shared_ptr<tgui::ChatBox> questionBox = tgui::ChatBox::create();
+    questionBox->setTextColor(sf::Color::White);
+    questionBox->getRenderer()->setBorderColor(sf::Color::Transparent);
+    questionBox->getRenderer()->setBackgroundColor(sf::Color::Black);
     questionBox->addLine(question.title);
 
     buttonA->setSize("39%", "14%");
@@ -175,26 +196,31 @@ void Screen::drawGameScreen(Question question) {
 
     buttonA->onPress([=] {
         this->inTimer = false;
+        this->timer.restart();
         player.send_answer("a");
     });
 
     buttonB->onPress([=] {
         this->inTimer = false;
+        this->timer.restart();
         player.send_answer("b");
     });
 
     buttonC->onPress([=] {
         this->inTimer = false;
+        this->timer.restart();
         player.send_answer("c");
     });
 
     buttonD->onPress([=] {
         this->inTimer = false;
+        this->timer.restart();
         player.send_answer("d");
     });
 
     skip->onPress([=] {
         this->inTimer = false;
+        this->timer.restart();
         player.send_skip_request();
         screen.drawWaitingForHostScreen();
     });
@@ -203,13 +229,13 @@ void Screen::drawGameScreen(Question question) {
 }
 
 void Screen::drawWinScreen() {
-    LOG_INFO("Win Screen");
+    // LOG_INFO("Win Screen");
     gui->removeAllWidgets();
     // this->setBackground();
 
     // set timer to show the screen for only 3 seconds
-    gameEnd = true;
-    timer.restart();
+    gameWin = true;
+    // timer.restart();
 
     // set background
     std::string imagePath = WIN_BACKGROUND_IMG_PATH;
@@ -228,13 +254,15 @@ void Screen::drawWinScreen() {
     std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
 
     textBox->setSize("66%", "27%");
-    textBox->setPosition("20%", "65%");
+    textBox->setPosition("23%", "65%");
     textBox->setTextSize(50);
     textBox->setTextColor(sf::Color::Blue);
     textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
     textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
-    textBox->addLine("Return to main lobby in 3 seconds");
 
+    int timeLeft = 4 - timer.getElapsedTime().asSeconds();
+    std::string s = "RETURN TO MAIN LOBBY IN " + std::to_string(timeLeft) + " SECONDS";
+    textBox->addLine(s);
     gui->add(textBox);
 
     window->clear();
@@ -243,13 +271,13 @@ void Screen::drawWinScreen() {
 }
 
 void Screen::drawGameOverScreen() {
-    LOG_INFO("Game Over Screen");
+    // LOG_INFO("Game Over Screen");
     gui->removeAllWidgets();
     // this->setBackground();
 
     // set timer to show the screen for only 3 seconds
-    gameEnd = true;
-    timer.restart();
+    gameOver = true;
+    // timer.restart();
 
     // set background
     std::string imagePath = LOSE_BACKGROUND_IMG_PATH;
@@ -267,12 +295,15 @@ void Screen::drawGameOverScreen() {
     // set position of text box to the lower center of the screen
     std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
     textBox->setSize("66%", "27%");
-    textBox->setPosition("20%", "65%");
+    textBox->setPosition("23%", "65%");
     textBox->setTextSize(50);
     textBox->setTextColor(sf::Color::Red);
     textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
     textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
-    textBox->addLine("Return to main lobby in 3 seconds");
+
+    int timeLeft = 4 - timer.getElapsedTime().asSeconds();
+    std::string s = "RETURN TO MAIN LOBBY IN " + std::to_string(timeLeft) + " SECONDS";
+    textBox->addLine(s);
     gui->add(textBox);
 
     window->clear();

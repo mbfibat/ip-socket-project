@@ -78,9 +78,11 @@ void Player::handle_socket() {
                     // TODO: animate correct answer
                 } else if (code == CODE_WIN) {
                     wait_action = ACTION_NONE;
+                    LOG_INFO("You win");
                     screen.drawWinScreen();
                 } else if (code == CODE_LOSE) {
                     wait_action = ACTION_NONE;
+                    LOG_INFO("You lose");
                     screen.drawGameOverScreen();
                 } else if (code == CODE_ERROR) {
                     wait_action = ACTION_NONE;

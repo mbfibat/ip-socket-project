@@ -23,6 +23,7 @@ int main() {
     screen.bind(&gui, &window);
     screen.drawWelcomeScreen();
 
+    // TODO: Reset player can_skip to true
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -40,10 +41,16 @@ int main() {
             player.send_answer("nop");
         }
 
-        if (screen.gameEnd && screen.timer.getElapsedTime().asSeconds() >= 3) {
-            screen.gameEnd = false;
-            screen.timer.restart();
-            screen.drawWelcomeScreen();
+        if (screen.gameWin || screen.gameOver) {
+            if (screen.gameWin)
+                screen.drawWinScreen();
+            else
+                screen.drawGameOverScreen();
+            if (screen.timer.getElapsedTime().asSeconds() >= 3) {
+                screen.gameWin = screen.gameOver = false;
+                screen.timer.restart();
+                screen.drawWelcomeScreen();
+            }
         }
 
         window.clear();
