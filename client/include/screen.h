@@ -36,6 +36,7 @@ public:
     void drawNamingScreen();
     void drawWaitingForHostScreen();
     void drawGameScreen(Question q);
+    void drawTimerInGameScreen();
     void drawWinScreen();
     void drawGameOverScreen();
     void playCorrectSound();

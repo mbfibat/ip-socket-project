@@ -46,6 +46,9 @@ int main() {
 
         player.handle_socket();
 
+        if (screen.inTimer)
+            screen.drawTimerInGameScreen();
+
         if (screen.inTimer && screen.timer.getElapsedTime().asSeconds() >= TIMER_SEC) {
             screen.inTimer = false;
             screen.timer.restart();

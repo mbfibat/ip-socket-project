@@ -244,6 +244,30 @@ void Screen::drawGameScreen(Question question) {
     LOG_INFO("End Turn");
 }
 
+void Screen::drawTimerInGameScreen() {
+    // remove the last timer
+    auto widgets = gui->getWidgets();
+    if (!widgets.empty()) {
+        auto lastWidget = widgets.back();
+        auto lastTimer = std::dynamic_pointer_cast<tgui::ChatBox>(lastWidget);
+        if (lastTimer != nullptr)
+            gui->remove(lastTimer);
+    }
+
+    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+
+    textBox->setSize("66%", "27%");
+    textBox->setPosition("45%", "25%");
+    textBox->setTextSize(60);
+    textBox->setTextColor(sf::Color::White);
+    textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
+    textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+
+    int timeLeft = 31 - timer.getElapsedTime().asSeconds();
+    textBox->addLine(std::to_string(timeLeft));
+    gui->add(textBox);
+}
+
 void Screen::drawWinScreen() {
     // LOG_INFO("Win Screen");
     gui->removeAllWidgets();
