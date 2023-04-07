@@ -245,27 +245,45 @@ void Screen::drawGameScreen(Question question) {
 }
 
 void Screen::drawTimerInGameScreen() {
-    // remove the last timer
-    auto widgets = gui->getWidgets();
-    if (!widgets.empty()) {
-        auto lastWidget = widgets.back();
-        auto lastTimer = std::dynamic_pointer_cast<tgui::ChatBox>(lastWidget);
-        if (lastTimer != nullptr)
-            gui->remove(lastTimer);
-    }
+    std::shared_ptr<tgui::Canvas> canvas = tgui::Canvas::create();
+    gui->add(canvas);
 
-    std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    canvas->clear(tgui::Color::Black);
+    canvas->clear(tgui::Color::Transparent);
 
-    textBox->setSize("66%", "27%");
-    textBox->setPosition("45%", "25%");
-    textBox->setTextSize(60);
-    textBox->setTextColor(sf::Color::White);
-    textBox->getRenderer()->setBorderColor(sf::Color::Transparent);
-    textBox->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+    canvas->setSize("10%", "15%");
+    canvas->setPosition("90%", "2%");
+
+    float radius = std::min(canvas->getSize().x, canvas->getSize().y) / 2 - 2;
+    sf::CircleShape circle(radius, 200);
+    circle.setFillColor(sf::Color::Transparent);
+    circle.setOutlineThickness(1);
+    circle.setOutlineColor(sf::Color::White);
+    circle.setOrigin(circle.getRadius(), circle.getRadius());
+    circle.setPosition(canvas->getSize().x / 2, canvas->getSize().y / 2);
+
+    // add the timer box
+
+    // std::shared_ptr<tgui::ChatBox> textBox = tgui::ChatBox::create();
+    sf::Text textBox;
+    textBox.setCharacterSize(60);
+    sf::Font font;
+    font.loadFromFile(FONT_PATH);
+    textBox.setFont(font);
+    textBox.setColor(sf::Color::White);
 
     int timeLeft = 31 - timer.getElapsedTime().asSeconds();
-    textBox->addLine(std::to_string(timeLeft));
-    gui->add(textBox);
+    textBox.setString(std::to_string(timeLeft));
+
+    // center text
+    sf::FloatRect textRect = textBox.getLocalBounds();
+    textBox.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    textBox.setPosition(canvas->getSize().x / 2, canvas->getSize().y / 2);
+
+    // gui->add(textBox);
+    canvas->draw(circle);
+    canvas->draw(textBox);
+    canvas->display();
 }
 
 void Screen::drawWinScreen() {
