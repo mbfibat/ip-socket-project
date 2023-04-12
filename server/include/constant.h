@@ -6,7 +6,6 @@
 #define IP "127.0.0.1"
 #define PORT 5000
 #define DATA_FOLDER "data/"
-#define TOTAL_PLAYER 2
 #define QUESTION_PER_PLAYER 5
 #define DELAY_MS 100
 

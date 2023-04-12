@@ -3,7 +3,7 @@
 void Game::handleNewConnection() {
     LOG_INFO("Handle new connection");
     // Check if game is full or is playing
-    if (countAlivePlayer() >= TOTAL_PLAYER || gameState == EnumGameState::GAME_RUNNING) {
+    if (countAlivePlayer() >= totalPlayer || gameState == EnumGameState::GAME_RUNNING) {
         LOG_INFO("Game is full or is playing");
         return;
     }
@@ -20,7 +20,7 @@ void Game::handleNewConnection() {
     selector.add(*client);
 
     // Find empty slot and add player
-    for (int i = 0; i < TOTAL_PLAYER; i++) {
+    for (int i = 0; i < totalPlayer; i++) {
         if (players[i] == NULL) {
             players[i] = new Player(client);
             break;
@@ -103,7 +103,7 @@ void Game::handleAnswer(Player *&player, sf::Packet &packet) {
     handleDisconnect(player);
 
     // Move to next player
-    currentPlayer = (currentPlayer + 1) % TOTAL_PLAYER;
+    currentPlayer = (currentPlayer + 1) % totalPlayer;
     sendQuestion();
 }
 
@@ -134,6 +134,6 @@ void Game::handleSkip(Player *&player, sf::Packet &packet) {
 
     LOG_INFO("Player " << players[currentPlayer]->name << " skipped turn");
     send(*player->socket, ACTION_SKIP, CODE_SUCCESS << "Skipped");
-    currentPlayer = (currentPlayer + 1) % TOTAL_PLAYER;
+    currentPlayer = (currentPlayer + 1) % totalPlayer;
     sendQuestion();
 }

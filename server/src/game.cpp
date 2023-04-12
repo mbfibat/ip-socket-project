@@ -50,45 +50,44 @@ void Game::run() {
             // Test the listener
             if (selector.isReady(listener)) {
                 handleNewConnection();
-            } else {
-                for (auto &player : players) {
-                    if (player != NULL && selector.isReady(*player->socket)) {
-                        LOG_INFO("Received packet from player " << player->name);
-                        sf::Packet packet;
-                        sf::Socket::Status status;
+            }
+            for (auto &player : players) {
+                if (player != NULL && selector.isReady(*player->socket)) {
+                    LOG_INFO("Received packet from player " << player->name);
+                    sf::Packet packet;
+                    sf::Socket::Status status;
 
-                        // Receive packet
-                        status = player->socket->receive(packet);
+                    // Receive packet
+                    status = player->socket->receive(packet);
 
-                        // Disconnect
-                        if (status == sf::Socket::Disconnected) {
-                            handleDisconnect(player);
-                            continue;
-                        }
+                    // Disconnect
+                    if (status == sf::Socket::Disconnected) {
+                        handleDisconnect(player);
+                        continue;
+                    }
 
-                        // Error
-                        if (status != sf::Socket::Done) {
-                            LOG_ERROR("Error receiving packet");
-                            continue;
-                        }
+                    // Error
+                    if (status != sf::Socket::Done) {
+                        LOG_ERROR("Error receiving packet");
+                        continue;
+                    }
 
-                        int action;
-                        packet >> action;
-                        // Handle action
-                        switch (action) {
-                            case ACTION_REGISTER:
-                                handleRegister(player, packet);
-                                break;
-                            case ACTION_ANSWER:
-                                handleAnswer(player, packet);
-                                break;
-                            case ACTION_SKIP:
-                                handleSkip(player, packet);
-                                break;
-                            default:
-                                LOG_ERROR("Invalid action");
-                                break;
-                        }
+                    int action;
+                    packet >> action;
+                    // Handle action
+                    switch (action) {
+                        case ACTION_REGISTER:
+                            handleRegister(player, packet);
+                            break;
+                        case ACTION_ANSWER:
+                            handleAnswer(player, packet);
+                            break;
+                        case ACTION_SKIP:
+                            handleSkip(player, packet);
+                            break;
+                        default:
+                            LOG_ERROR("Invalid action");
+                            break;
                     }
                 }
             }
