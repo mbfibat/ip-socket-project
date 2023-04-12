@@ -270,7 +270,7 @@ void Screen::drawTimerInGameScreen() {
     sf::Font font;
     font.loadFromFile(FONT_PATH);
     textBox.setFont(font);
-    textBox.setColor(sf::Color::White);
+    textBox.setFillColor(sf::Color::White);
 
     int timeLeft = 31 - timer.getElapsedTime().asSeconds();
     textBox.setString(std::to_string(timeLeft));

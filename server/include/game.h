@@ -23,10 +23,11 @@ class Game {
     sf::TcpListener listener;
     sf::SocketSelector selector;
 
-    Player *players[TOTAL_PLAYER];
+    std::vector<Player *> players;
     std::vector<Question> questions;
     std::vector<int> selectedQuestion;
 
+    int totalPlayer;
     int currentPlayer;
 
     int totalQuestion;

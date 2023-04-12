@@ -30,12 +30,10 @@ Game::Game() {
 }
 
 void Game::init() {
-    for (int i = 0; i < TOTAL_PLAYER; i++) {
-        if (players[i] != NULL) {
-            delete players[i];
-            players[i] = NULL;
-        }
-    }
+    std::cout << "Enter total number of player (from 1 to 10): ";
+    std::cin >> totalPlayer;
+
+    players.assign(totalPlayer, NULL);
 
     selectedQuestion.clear();
 

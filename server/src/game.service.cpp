@@ -52,7 +52,7 @@ void Game::gameStart() {
     gameState = EnumGameState::GAME_RUNNING;
 
     // Prepare question
-    totalQuestion = TOTAL_PLAYER * QUESTION_PER_PLAYER;
+    totalQuestion = totalPlayer * QUESTION_PER_PLAYER;
     selectedQuestion = pick(questions.size(), totalQuestion);
     for (int i = 0; i < totalQuestion; ++i) {
         questions[selectedQuestion[i]].id = i + 1;
@@ -61,7 +61,7 @@ void Game::gameStart() {
     // Send game info
     int i = 1;
     for (auto &player : players) {
-        send(*player->socket, ACTION_GAME_INFO, TOTAL_PLAYER << i++ << totalQuestion);
+        send(*player->socket, ACTION_GAME_INFO, totalPlayer << i++ << totalQuestion);
     }
 }
 
@@ -74,7 +74,7 @@ void Game::sendQuestion() {
 
     // Find alive player
     while (players[currentPlayer] == NULL) {
-        currentPlayer = (currentPlayer + 1) % TOTAL_PLAYER;
+        currentPlayer = (currentPlayer + 1) % totalPlayer;
     }
 
     // Send question
