@@ -44,6 +44,9 @@ void Game::handleRegister(Player *&player, sf::Packet &packet) {
     packet >> name;
     auto [code, msg] = registerPlayer(name, player);
     send(*player->socket, ACTION_REGISTER, code << msg);
+    if (code == CODE_ERROR) {
+        handleDisconnect(player);
+    }
 }
 
 void Game::handleAnswer(Player *&player, sf::Packet &packet) {
