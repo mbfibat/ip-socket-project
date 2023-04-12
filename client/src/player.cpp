@@ -2,15 +2,21 @@
 
 // Connect to server, if server is not open exit the program
 Player::Player() {
-    if (socket.connect(IP, PORT) != sf::Socket::Done) {
+}
+
+void Player::init() {
+    can_skip = true;
+}
+
+void Player::connect() {
+    socket = new sf::TcpSocket();
+    if (socket->connect(IP, PORT) != sf::Socket::Done) {
         LOG_ERROR("Error connecting to server");
         exit(0);
     }
-    socket.setBlocking(false);
-    selector.add(socket);
+    socket->setBlocking(false);
+    selector.add(*socket);
     LOG_INFO("Connected to server");
-
-    can_skip = true;
 }
 
 void Player::handle_socket() {
@@ -18,10 +24,17 @@ void Player::handle_socket() {
         return;
     }
 
-    if (selector.isReady(socket)) {
+    if (selector.isReady(*socket)) {
         int action;
         sf::Packet recv_packet;
-        if (socket.receive(recv_packet) != sf::Socket::Done) {
+        sf::Socket::Status status;
+
+        status = socket->receive(recv_packet);
+        if (status == sf::Socket::Disconnected) {
+            selector.remove(*socket);
+            return;
+        }
+        if (status != sf::Socket::Done) {
             LOG_ERROR("Error receiving packet");
             return;
         }

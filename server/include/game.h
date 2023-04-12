@@ -21,17 +21,18 @@ typedef struct {
 
 class Game {
     sf::TcpListener listener;
-    std::vector<sf::TcpSocket *> clients;
     sf::SocketSelector selector;
 
-    std::vector<Player> players;
+    Player *players[TOTAL_PLAYER];
     std::vector<Question> questions;
     std::vector<int> selectedQuestion;
 
-    int totalQuestion;
     int currentPlayer;
+
+    int totalQuestion;
     int currentQuestion;
-    bool running;
+
+    EnumGameState gameState;
 
 public:
     Game();
@@ -39,16 +40,17 @@ public:
     void run();
 
     bool isValidName(std::string name);
+    bool isAllPlayerRegistered();
     int countAlivePlayer();
-    Response registerPlayer(std::string name, sf::TcpSocket &client);
-    bool disconnectPlayer(sf::TcpSocket *client);
+    Response registerPlayer(std::string name, Player *&player);
     void gameStart();
     void sendQuestion();
 
+    void handleDisconnect(Player *&player);
     void handleNewConnection();
-    void handleRegister(sf::TcpSocket &client, sf::Packet &packet);
-    void handleAnswer(sf::TcpSocket &client, sf::Packet &packet);
-    void handleSkip(sf::TcpSocket &client, sf::Packet &packet);
+    void handleRegister(Player *&player, sf::Packet &packet);
+    void handleAnswer(Player *&player, sf::Packet &packet);
+    void handleSkip(Player *&player, sf::Packet &packet);
 };
 
 #endif  // GAME_H

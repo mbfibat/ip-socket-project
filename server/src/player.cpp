@@ -1,8 +1,11 @@
 #include "../include/player.h"
 
-Player::Player(std::string name, sf::TcpSocket *client) {
-    this->name = name;
-    this->client = client;
-    alive = true;
+Player::Player(sf::TcpSocket *client) {
+    this->socket = client;
     skipped = false;
+    registered = false;
+}
+
+Player::~Player() {
+    delete socket;
 }

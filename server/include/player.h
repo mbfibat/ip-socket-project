@@ -6,12 +6,13 @@
 #include "socket.h"
 
 struct Player {
-    sf::TcpSocket *client;
+    sf::TcpSocket *socket;
     std::string name;
-    bool alive;
+    bool registered;
     bool skipped;
 
-    Player(std::string name, sf::TcpSocket *client);
+    Player(sf::TcpSocket *client);
+    ~Player();
 };
 
 #endif  // PLAYER_H

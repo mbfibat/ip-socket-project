@@ -22,38 +22,52 @@ Game::Game() {
         }
     }
     LOG_INFO("Loaded " << questions.size() << " questions");
+
+    // Init variables
+    for (auto &player : players) {
+        player = NULL;
+    }
 }
 
 void Game::init() {
-    running = true;
+    for (int i = 0; i < TOTAL_PLAYER; i++) {
+        if (players[i] != NULL) {
+            delete players[i];
+            players[i] = NULL;
+        }
+    }
+
+    selectedQuestion.clear();
+
+    gameState = EnumGameState::WAITING_FOR_PLAYER;
     currentPlayer = 0;
     currentQuestion = 0;
     totalQuestion = 0;
-
-    players.clear();
-    selectedQuestion.clear();
 }
 
 void Game::run() {
-    while (running) {
+    while (gameState != EnumGameState::GAME_FINISHED) {
         // Wait for one of the sockets to be ready for reading
-        if (selector.wait()) {
+        if (selector.wait(sf::milliseconds(DELAY_MS))) {
             // Test the listener
             if (selector.isReady(listener)) {
                 handleNewConnection();
             } else {
-                for (auto &client : clients) {
-                    if (client != NULL && selector.isReady(*client)) {
+                for (auto &player : players) {
+                    if (player != NULL && selector.isReady(*player->socket)) {
+                        LOG_INFO("Received packet from player " << player->name);
                         sf::Packet packet;
                         sf::Socket::Status status;
 
                         // Receive packet
-                        status = client->receive(packet);
+                        status = player->socket->receive(packet);
+
                         // Disconnect
                         if (status == sf::Socket::Disconnected) {
-                            disconnectPlayer(client);
+                            handleDisconnect(player);
                             continue;
                         }
+
                         // Error
                         if (status != sf::Socket::Done) {
                             LOG_ERROR("Error receiving packet");
@@ -65,13 +79,13 @@ void Game::run() {
                         // Handle action
                         switch (action) {
                             case ACTION_REGISTER:
-                                handleRegister(*client, packet);
+                                handleRegister(player, packet);
                                 break;
                             case ACTION_ANSWER:
-                                handleAnswer(*client, packet);
+                                handleAnswer(player, packet);
                                 break;
                             case ACTION_SKIP:
-                                handleSkip(*client, packet);
+                                handleSkip(player, packet);
                                 break;
                             default:
                                 LOG_ERROR("Invalid action");
@@ -79,6 +93,14 @@ void Game::run() {
                         }
                     }
                 }
+            }
+        }
+
+        // Check if all players are ready
+        if (gameState == EnumGameState::WAITING_FOR_PLAYER) {
+            if (isAllPlayerRegistered()) {
+                gameStart();
+                sendQuestion();
             }
         }
     }

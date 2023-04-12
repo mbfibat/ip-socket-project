@@ -6,13 +6,17 @@
 // The name is valid if regex ^[a-zA-Z0-9_]{1,10}$ matches
 // The name is taken if the server returns a boolean false
 void Player::send_register_request(std::string name) {
+    LOG_INFO(name);
     if (wait_action != ACTION_NONE) {
         LOG_ERROR("Cannot register, waiting for action: " << wait_action);
         return;
     }
 
+    init();
+    connect();
+
     this->name = name;
-    send(socket, ACTION_REGISTER, name);
+    send(*socket, ACTION_REGISTER, name);
     wait_action = ACTION_REGISTER;
 }
 
@@ -24,7 +28,7 @@ void Player::send_answer(std::string answer) {
         return;
     }
 
-    send(socket, ACTION_ANSWER, name << question.id << answer);
+    send(*socket, ACTION_ANSWER, name << question.id << answer);
     wait_action = ACTION_ANSWER;
 }
 
@@ -40,7 +44,7 @@ void Player::send_skip_request() {
         return;
     }
 
-    send(socket, ACTION_SKIP, name << question.id);
+    send(*socket, ACTION_SKIP, name << question.id);
     can_skip = false;
     wait_action = ACTION_SKIP;
 }

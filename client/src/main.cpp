@@ -23,17 +23,6 @@ int main() {
     screen.bind(&gui, &window);
     screen.drawWelcomeScreen();
 
-    // sf::SoundBuffer buffer;
-    // if (!buffer.loadFromFile(CORRECT_SOUND_PATH)) {
-    //     LOG_INFO("Cannot load correct sound");
-    // }
-    // sf::Sound sound;
-    // sound.setBuffer(buffer);
-    // sound.setVolume(100);
-    // sound.play();
-    // LOG_INFO("play correct sound");
-
-    // screen.playCorrectSound();
     // TODO: Reset player can_skip to true
     while (window.isOpen()) {
         sf::Event event;

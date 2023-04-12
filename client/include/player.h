@@ -16,7 +16,7 @@ typedef struct {
 
 class Player {
 private:
-    sf::TcpSocket socket;
+    sf::TcpSocket *socket;
     sf::SocketSelector selector;
 
     std::string name;
@@ -26,6 +26,9 @@ public:
     bool can_skip;  // can skip the question only once
 
     Player();
+
+    void init();
+    void connect();
 
     void handle_socket();
 
